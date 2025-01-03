@@ -146,7 +146,7 @@ bool loadGame(const RomHeader *rh) {
 		romSpacePtr = (const u8 *)rh + sizeof(RomHeader);
 		selectedGame = selected;
 		checkMachine(rh);
-		setEmuSpeed(0);
+//		setEmuSpeed(0);
 		loadCart();
 		gameInserted = true;
 		if (emuSettings & AUTOLOAD_NVRAM) {

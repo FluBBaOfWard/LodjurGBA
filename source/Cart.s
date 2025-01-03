@@ -1,6 +1,6 @@
 #ifdef __arm__
 
-//#define EMBEDDED_ROM
+#define EMBEDDED_ROM
 
 #include "ARMSuzy/ARMSuzy.i"
 #include "ARMMikey/ARMMikey.i"
@@ -8,22 +8,12 @@
 
 	.global cartFlags
 	.global romSpacePtr
-	.global biosBase
 	.global biosSpace
-	.global g_BIOSBASE
 	.global lynxRAM
 	.global DIRTYTILES
-	.global wsSRAM
-	.global extEeprom
-	.global extEepromMem
-	.global sramSize
-	.global eepromSize
 	.global gRomSize
 	.global maxRomSize
-	.global romMask
-	.global gGameHeader
 	.global gGameID
-	.global cartOrientation
 	.global gConfig
 	.global gMachineSet
 	.global gMachine
@@ -69,10 +59,15 @@ machineInit: 				;@ Called from C
 
 #ifdef EMBEDDED_ROM
 	ldr r0,=romSize
-	mov r1,#ROM_SpaceEnd-ROM_Space
+	ldr r1,=(ROM_SpaceEnd-ROM_Space)
 	str r1,[r0]
-	ldr r7,=ROM_Space
-	str r7,romSpacePtr
+	ldr r0,=romSpacePtr
+	ldr r1,=ROM_Space
+	str r1,[r0]
+	ldr r0,=biosSpace
+	ldr r1,=LYNX_BIOS_INTERNAL
+	mov r2,#0x200
+	bl memcpy
 #endif
 	bl memoryMapInit
 	bl gfxInit
@@ -125,7 +120,7 @@ loadCart: 					;@ Called from C:
 clearDirtyTiles:
 ;@----------------------------------------------------------------------------
 	ldr r0,=DIRTYTILES			;@ Clear RAM
-	mov r1,#0x800/4
+	mov r1,#0x200/4
 	b memclr_
 
 ;@----------------------------------------------------------------------------
@@ -216,8 +211,6 @@ gGameID:
 
 romSpacePtr:
 	.long 0x08000000
-romPtr:
-	.long 0
 gRomSize:
 romSize:
 	.long 0

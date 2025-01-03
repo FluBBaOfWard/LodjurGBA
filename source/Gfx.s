@@ -47,11 +47,16 @@ gfxInit:					;@ Called from machineInit
 ;@----------------------------------------------------------------------------
 gfxReset:					;@ Called with CPU reset
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r4,r5,lr}
+	stmfd sp!,{lr}
 
 	ldr r0,=gfxState
 	mov r1,#5					;@ 5*4
 	bl memclr_					;@ Clear GFX regs
+
+	ldr r0,=(((SCREEN_HEIGHT-GAME_HEIGHT)/2) * SCREEN_WIDTH * 2)
+	add r0,r0,#SCREEN_WIDTH-GAME_WIDTH
+	add r0,r0,#0x06000000
+	str r0,currentDest
 
 	bl gfxWinInit
 
@@ -65,16 +70,14 @@ gfxReset:					;@ Called with CPU reset
 	ldr r0,=lynxRAM
 	bl suzyReset0
 
-	ldr r4,=gGammaValue
-	ldr r5,=gContrastValue
-	ldrb r4,[r4]
-	ldrb r5,[r5]
-	mov r0,r4
-	mov r1,r5
+	ldr r0,=gGammaValue
+	ldr r1,=gContrastValue
+	ldrb r0,[r0]
+	ldrb r1,[r1]
 	bl paletteInit				;@ Do palette mapping
 	bl paletteTxAll				;@ Transfer it
 
-	ldmfd sp!,{r4,r5,pc}
+	ldmfd sp!,{pc}
 
 ;@----------------------------------------------------------------------------
 gfxWinInit:
@@ -283,9 +286,9 @@ setScreenRefresh:			;@ r0 in = Lynx cycles per frame.
 	bx lr
 
 ;@----------------------------------------------------------------------------
-#ifdef GBA
-	.section .iwram, "ax", %progbits	;@ For the GBA
-#endif
+//#ifdef GBA
+//	.section .iwram, "ax", %progbits	;@ For the GBA
+//#endif
 ;@----------------------------------------------------------------------------
 vblIrqHandler:
 	.type vblIrqHandler STT_FUNC
@@ -338,6 +341,11 @@ gfxRefresh:					;@ Called from C when changing scaling.
 gfxEndFrame:				;@ Called just after screen end (line 144)	(r0-r3 safe to use)
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r4-r8,lr}
+
+	ldr r0,=(((SCREEN_HEIGHT-GAME_HEIGHT)/2) * SCREEN_WIDTH * 2)
+	add r0,r0,#SCREEN_WIDTH-GAME_WIDTH
+	add r0,r0,#0x06000000
+	str r0,currentDest
 
 	bl paletteTxAll
 ;@--------------------------

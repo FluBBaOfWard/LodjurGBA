@@ -150,11 +150,12 @@ void uiNullNormal() {
 
 void uiAbout() {
 	setupSubMenuText();
-	drawText("B:      Lynx B Button", 3);
-	drawText("A:      Lynx A Button", 4);
-	drawText("Start:  Lynx Pause Button", 5);
-	drawText("Select: Lynx Sound Button", 6);
-	drawText("DPad:   Lynx d-pad", 7);
+	drawText("B:         Lynx B Button", 3);
+	drawText("A:         Lynx A Button", 4);
+	drawText("Y:         Lynx Option I", 5);
+	drawText("X:         Lynx Option II", 6);
+	drawText("Start:     Lynx Pause Button", 7);
+	drawText("DPad:      Lynx d-pad", 8);
 
 	drawText("LodjurGBA  " EMUVERSION, 16);
 	drawText("ARMSuzy    " ARMSUZYVERSION, 17);
@@ -238,7 +239,7 @@ const char *getSwapABText() {
 /// Change gamma (brightness)
 void gammaChange() {
 	gammaSet();
-	paletteInit(gGammaValue);
+	paletteInit(gGammaValue, gContrastValue);
 	paletteTxAll();					// Make new palette visible
 //	setupEmuBorderPalette();
 	setupMenuPalette();
@@ -248,7 +249,7 @@ void gammaChange() {
 void contrastSet() {
 	gContrastValue++;
 	if (gContrastValue > 4) gContrastValue = 0;
-	paletteInit(gGammaValue);
+	paletteInit(gGammaValue, gContrastValue);
 	paletteTxAll();					// Make new palette visible
 //	setupEmuBorderPalette();
 	setupMenuPalette();

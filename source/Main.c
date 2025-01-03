@@ -144,8 +144,8 @@ static void setupGraphics() {
 				| BG2_ON
 				| BG3_ON
 				| OBJ_ON
-				| WIN0_ON
-				| WIN1_ON
+//				| WIN0_ON
+//				| WIN1_ON
 				;
 	SetMode(GFX_DISPCNT);
 	GFX_BG0CNT = TEXTBG_SIZE_256x512 | BG_MAP_BASE(0) | BG_TILE_BASE(2) | BG_PRIORITY(2);
