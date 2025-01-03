@@ -1,0 +1,8 @@
+
+-gB 16
+-gb
+# Transparent Color
+-gT 0x00E800
+
+# use lz77 compression
+-gzl

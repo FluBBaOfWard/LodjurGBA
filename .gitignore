@@ -1,0 +1,10 @@
+LodjurGBA.xcodeproj/xcuserdata
+LodjurGBA.xcodeproj/project.xcworkspace/xcuserdata
+contents.xcworkspacedata
+build
+*.elf
+*.gba
+*.zip
+*.lnx
+*.lyx
+*.sav

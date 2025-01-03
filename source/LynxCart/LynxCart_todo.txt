@@ -1,0 +1,5 @@
+LynxCart To do
+-------------------------------
+
+	Not sure how masking of cartCounter is made.
+
