@@ -40,10 +40,11 @@ ROM_Space:
 //	.incbin "roms/Baseball Heroes (USA).lyx"
 //	.incbin "roms/Batman Returns (1992).lnx"
 //	.incbin "roms/Desert Strike - Return to the Gulf (1993) (Telegames).lnx"
-	.incbin "roms/Double Dragon (1993) (Telegames).lnx"
+//	.incbin "roms/Double Dragon (1993) (Telegames).lnx"
 //	.incbin "roms/Dracula - The Undead (1991).lnx"
 //	.incbin "roms/Ninja Gaiden (1990).lnx"
 //	.incbin "roms/Ninja Gaiden III - the Ancient Ship of Doom (1993).lnx"
+	.incbin "roms/Shadow of the Beast (1992)[crc-2].lnx"
 ROM_SpaceEnd:
 LYNX_BIOS_INTERNAL:
 	.incbin "roms/lynxboot.img"

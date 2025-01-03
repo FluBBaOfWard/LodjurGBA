@@ -178,54 +178,17 @@ paletteTx:					;@ r0=destination, mikptr=Mikey
 	ldr r2,=0x1FFE
 	stmfd sp!,{r4-r8,lr}
 	mov r5,#0
-	ldrb r3,[mikptr,#mikPalette]	;@ Background palette
 
-//	ldr r4,[mikptr,#paletteRAM]
-	mov r3,r3,lsl#1
-	ldrh r3,[r4,r3]
-	and r3,r2,r3,lsl#1
-	ldrh r3,[r1,r3]
-	strh r3,[r0]				;@ Background palette
-	tst r7,#0x40				;@ 4bitplane mode?
-	beq col4Tx
-	add r6,r0,#0x100			;@ Sprite pal ofs - r5
+	add r4,mikptr,#mikPalette
 txLoop:
-	ldrh r3,[r4],#2
+	ldr r3,[r4],#4
 	and r3,r2,r3,lsl#1
 	ldrh r3,[r1,r3]
-	tst r5,#0x1E
-	strhne r3,[r0,r5]			;@ Background palette
-	cmp r5,#0x100
-	strhpl r3,[r6,r5]			;@ Sprite palette
+	strh r3,[r0,r5]			;@ Background palette
 
 	add r5,r5,#2
-	cmp r5,#0x200
+	cmp r5,#0x20
 	bmi txLoop
-
-	ldmfd sp!,{r4-r8,lr}
-	bx lr
-
-col4Tx:
-col4TxLoop:
-	ldrh r3,[r4,r5]
-	and r3,r2,r3,lsl#1
-	ldrh r3,[r1,r3]
-	tst r5,#0x1E
-	strhne r3,[r0]				;@ Background palette
-	strh r3,[r0,#0x8]			;@ Opaque tiles palette
-	cmp r5,#0x100
-	addpl r6,r0,#0x100
-	strhpl r3,[r6]				;@ Sprite palette
-	strhpl r3,[r6,#0x8]			;@ Sprite palette opaque
-
-	add r0,r0,#2
-	add r5,r5,#2
-	tst r5,#6
-	bne col4TxLoop
-	add r0,r0,#0x18
-	add r5,r5,#0x18
-	cmp r5,#0x200
-	bmi col4TxLoop
 
 	ldmfd sp!,{r4-r8,lr}
 	bx lr

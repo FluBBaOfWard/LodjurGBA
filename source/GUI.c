@@ -37,8 +37,6 @@ static const char *getSwapABText(void);
 static void contrastSet(void);
 static const char *getContrastText(void);
 
-static void uiMachine(void);
-
 const MItem dummyItems[] = {
 	{"", uiDummy},
 };
@@ -104,7 +102,7 @@ const Menu menu2 = MENU_M("File Handling", uiAuto, fileItems);
 const Menu menu3 = MENU_M("Controller Settings", uiAuto, ctrlItems);
 const Menu menu4 = MENU_M("Display Settings", uiAuto, displayItems);
 const Menu menu5 = MENU_M("Other Settings", uiAuto, setItems);
-const Menu menu6 = MENU_M("Machine Settings", uiMachine, machineItems);
+const Menu menu6 = MENU_M("Machine Settings", uiAuto, machineItems);
 const Menu menu7 = MENU_M("Debug", uiAuto, debugItems);
 const Menu menu8 = MENU_M("About", uiAbout, dummyItems);
 const Menu menu9 = MENU_M("Load game", uiLoadGame, fnList9);
@@ -120,7 +118,6 @@ u8 gRotation = 0;
 
 const char *const machTxt[]  = {"Auto", "Lynx", "Lynx II"};
 const char *const bordTxt[]  = {"Black", "Frame", "BG Color", "None"};
-const char *const langTxt[]  = {"Japanese", "English"};
 
 /// This is called at the start of the emulator
 void setupGUI() {
@@ -131,11 +128,22 @@ void setupGUI() {
 
 /// This is called when going from emu to ui.
 void enterGUI() {
+	GFX_DISPCNT = MODE_0
+				| OBJ_1D_MAP
+				| BG0_ON
+				| BG1_ON
+				| BG2_ON
+				| BG3_ON
+				| OBJ_ON
+				| WIN0_ON
+				| WIN1_ON
+				;
 }
 
 /// This is called going from ui to emu.
 void exitGUI() {
 	setupEmuBorderPalette();
+	GFX_DISPCNT = MODE_3 | BG2_ON;
 }
 
 void quickSelectGame() {
@@ -152,8 +160,8 @@ void uiAbout() {
 	setupSubMenuText();
 	drawText("B:         Lynx B Button", 3);
 	drawText("A:         Lynx A Button", 4);
-	drawText("Y:         Lynx Option I", 5);
-	drawText("X:         Lynx Option II", 6);
+	drawText("L:         Lynx Option I", 5);
+	drawText("R:         Lynx Option II", 6);
 	drawText("Start:     Lynx Pause Button", 7);
 	drawText("DPad:      Lynx d-pad", 8);
 
@@ -161,15 +169,6 @@ void uiAbout() {
 	drawText("ARMSuzy    " ARMSUZYVERSION, 17);
 	drawText("ARMMIKEY   " ARMMIKEYVERSION, 18);
 	drawText("ARM6502    " ARM6502VERSION, 19);
-}
-
-static void uiMachine() {
-	setupSubMenuText();
-	drawSubItem("Machine: ", getMachineText());
-	drawSubItem("Cpu Speed Hacks: ", getSpeedHackText());
-	drawSubItem("Half Cpu Speed: ", autoTxt[(emuSettings&HALF_CPU_SPEED)>>16]);
-	drawSubItem("Sound: ", autoTxt[soundMode&1]);
-//	drawSubItem("Language: ",langTxt[gLang]);
 }
 
 void uiLoadGame() {
