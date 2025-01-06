@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#define LNXID 0x1A535742		// "BWS",0x1A - Lynx
+#define LNXID 0x1A584C41		// "ALX",0x1A - Lynx
 
 typedef struct {
 	const u32 identifier;		// LNXID

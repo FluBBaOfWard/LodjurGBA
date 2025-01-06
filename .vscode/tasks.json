@@ -51,7 +51,7 @@
                 "command": "C:/mGBA/mGBA.exe -g ${workspaceFolder}/${workspaceFolderBasename}.gba;sleep 5;echo debuggerReady"
             },
             "osx": {
-                "command": "open /Applications/mGBA.app --args -g ${workspaceFolder}/${workspaceFolderBasename}.gba;sleep 3;echo debuggerReady"
+                "command": "open /Applications/mGBA.app --args -g ${workspaceFolder}/${workspaceFolderBasename}.gba"
             },
             "presentation": {
                 "clear": true,

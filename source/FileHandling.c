@@ -49,7 +49,6 @@ int loadSettings() {
 	}
 */
 	gBorderEnable = (cfg.config & 1) ^ 1;
-	gPaletteBank  = cfg.palette;
 	gGammaValue   = cfg.gammaValue & 0xF;
 	gContrastValue = (cfg.gammaValue>>4) & 0xF;
 	emuSettings = cfg.emuSettings & ~EMUSPEED_MASK;	// Clear speed setting.

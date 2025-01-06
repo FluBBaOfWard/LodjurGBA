@@ -371,7 +371,7 @@ GFX_BG1CNT:
 	.short 0
 
 #ifdef GBA
-	.section .sbss				;@ For the GBA
+	.section .sbss				;@ This is EWRAM on GBA with devkitARM
 #else
 	.section .bss
 #endif
@@ -391,6 +391,9 @@ EMUPALBUFF:
 PAL_CACHE:
 	.space 0x40					;@ 16*4
 
+#ifdef GBA
+	.section .bss				;@ This is IWRAM on GBA with devkitARM
+#endif
 ;@----------------------------------------------------------------------------
 suzy_0:
 	.space suzySize

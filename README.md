@@ -68,6 +68,7 @@ Put the GBA into sleepmode. START+SELECT wakes up from sleep mode (activated
 ## Controls
 
 * GBA B & A buttons are mapped to Lynx B & A.
+* GBA L & R buttons are mapped to Lynx Option II & Option I.
 * GBA d-pad is mapped to Lynx d-pad.
 * GBA Start is mapped to Lynx Pause.
 
@@ -86,5 +87,7 @@ Keith Wilkins for Handy source and info.
 Fredrik Ahlström
 
 <https://bsky.app/profile/therealflubba.bsky.social>
+
 <https://www.github.com/FluBBaOfWard>
+
 X/Twitter @TheRealFluBBa

@@ -1,7 +1,7 @@
 LodjurGBA revision history
 -=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-V0.1.0 - 2025-01-21 (FluBBa)
+V0.1.0 - 2025-01-06 (FluBBa)
 	First version released.
 
 V0.0.5 - 2024-12-21 (FluBBa)

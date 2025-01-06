@@ -1,6 +1,6 @@
 #ifdef __arm__
 
-#define EMBEDDED_ROM
+//#define EMBEDDED_ROM
 
 #include "ARMSuzy/ARMSuzy.i"
 #include "ARMMikey/ARMMikey.i"
@@ -13,13 +13,10 @@
 	.global DIRTYTILES
 	.global gRomSize
 	.global maxRomSize
-	.global gGameID
 	.global gConfig
 	.global gMachineSet
 	.global gMachine
 	.global gSOC
-	.global gLang
-	.global gPaletteBank
 	.global cart_0
 
 	.global machineInit
@@ -44,7 +41,7 @@ ROM_Space:
 //	.incbin "roms/Dracula - The Undead (1991).lnx"
 //	.incbin "roms/Ninja Gaiden (1990).lnx"
 //	.incbin "roms/Ninja Gaiden III - the Ancient Ship of Doom (1993).lnx"
-	.incbin "roms/Shadow of the Beast (1992)[crc-2].lnx"
+//	.incbin "roms/Shadow of the Beast (1992)[crc-2].lnx"
 ROM_SpaceEnd:
 LYNX_BIOS_INTERNAL:
 	.incbin "roms/lynxboot.img"
@@ -200,15 +197,7 @@ gMachine:
 	.byte HW_LYNX_II
 gSOC:
 	.byte SOC_HOWARD
-gLang:
-	.byte 1						;@ language
-gPaletteBank:
-	.byte 0						;@ palettebank
-gGameID:
-	.byte 0						;@ Game ID
-	.byte 0
-	.byte 0
-	.space 2					;@ alignment.
+	.space 3					;@ alignment.
 
 romSpacePtr:
 	.long 0x08000000
@@ -219,7 +208,7 @@ maxRomSize:
 	.long 0
 ;@----------------------------------------------------------------------------
 #ifdef GBA
-	.section .sbss				;@ For the GBA
+	.section .sbss				;@ This is EWRAM on GBA with devkitARM
 #else
 	.section .bss
 #endif

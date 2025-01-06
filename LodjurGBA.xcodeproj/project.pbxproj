@@ -74,6 +74,7 @@
 		9C974AAB2D27DFDA004E8EE8 /* udiv32.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = udiv32.s; sourceTree = "<group>"; };
 		9C974AAC2D27DFDA004E8EE8 /* Version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		9C974AAE2D27F72C004E8EE8 /* EmuMenu.i */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c.preprocessed; path = EmuMenu.i; sourceTree = "<group>"; };
+		9C974AAF2D2C52CF004E8EE8 /* Formats.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Formats.txt; sourceTree = "<group>"; };
 		9CBC0C8E26DD7C2A0039D17E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9CC013FC2668FDD9005714F7 /* Emubase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Emubase.h; sourceTree = "<group>"; };
 		A49D34381757E54900BD9B4B /* cpu.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = cpu.s; sourceTree = "<group>"; };
@@ -97,6 +98,7 @@
 				9C974A892D27D454004E8EE8 /* LodjurGBA_todo.txt */,
 				A4AA02141B04077F0043E4D4 /* History.txt */,
 				9CBC0C8E26DD7C2A0039D17E /* README.md */,
+				9C974AAF2D2C52CF004E8EE8 /* Formats.txt */,
 				746D78E014ED9A6D00CC738F /* makefile */,
 				A48CC0251618E65200465E20 /* source */,
 				350E1C3418AFB50800074DD5 /* graphics */,

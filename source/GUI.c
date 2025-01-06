@@ -16,7 +16,7 @@
 #include "ARMMikey/Version.h"
 #include "ARMSuzy/Version.h"
 
-#define EMUVERSION "V0.1.0 2025-01-03"
+#define EMUVERSION "V0.1.0 2025-01-06"
 
 void hacksInit(void);
 
