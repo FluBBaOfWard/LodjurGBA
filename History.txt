@@ -1,6 +1,11 @@
 LodjurGBA revision history
 -=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+V0.1.2 - 2025-01-22 (FluBBa)
+	Fixed initial palette.
+	Fixed handling of CPU sleep/Suzy sprite paint.
+	Better cycle counting.
+
 V0.1.0 - 2025-01-06 (FluBBa)
 	First version released.
 

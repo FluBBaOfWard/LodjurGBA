@@ -36,6 +36,7 @@ ROM_Space:
 //	.incbin "roms/A.P.B. - All Points Bulletin (1990).lnx"
 //	.incbin "roms/Baseball Heroes (USA).lyx"
 //	.incbin "roms/Batman Returns (1992).lnx"
+//	.incbin "roms/Blue Lightning (1989).lnx"
 //	.incbin "roms/Desert Strike - Return to the Gulf (1993) (Telegames).lnx"
 //	.incbin "roms/Double Dragon (1993) (Telegames).lnx"
 //	.incbin "roms/Dracula - The Undead (1991).lnx"
@@ -79,7 +80,7 @@ machineInit: 				;@ Called from C
 	.section .ewram,"ax"
 	.align 2
 ;@----------------------------------------------------------------------------
-loadCart: 					;@ Called from C:
+loadCart: 					;@ Called from C
 	.type   loadCart STT_FUNC
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r4-r11,lr}
@@ -112,7 +113,6 @@ loadCart: 					;@ Called from C:
 	bl cpuReset
 	ldmfd sp!,{r4-r11,lr}
 	bx lr
-
 
 ;@----------------------------------------------------------------------------
 clearDirtyTiles:

@@ -96,8 +96,8 @@
 			isa = PBXGroup;
 			children = (
 				9C974A892D27D454004E8EE8 /* LodjurGBA_todo.txt */,
-				A4AA02141B04077F0043E4D4 /* History.txt */,
 				9CBC0C8E26DD7C2A0039D17E /* README.md */,
+				A4AA02141B04077F0043E4D4 /* History.txt */,
 				9C974AAF2D2C52CF004E8EE8 /* Formats.txt */,
 				746D78E014ED9A6D00CC738F /* makefile */,
 				A48CC0251618E65200465E20 /* source */,

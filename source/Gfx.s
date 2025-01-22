@@ -82,7 +82,6 @@ gfxReset:					;@ Called with CPU reset
 ;@----------------------------------------------------------------------------
 gfxWinInit:
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{lr}
 	mov r0,#REG_BASE
 	;@ Horizontal start-end
 	ldr r1,=(((SCREEN_WIDTH-GAME_WIDTH)/2)<<8)+(SCREEN_WIDTH+GAME_WIDTH)/2
@@ -95,16 +94,7 @@ gfxWinInit:
 
 	ldr r3,=0x002C3B3B			;@ WinIN0/1, BG0, BG1, BG3, SPR & COL inside Win0
 	str r3,[r0,#REG_WININ]		;@ WinOUT, Only BG2, BG3 & COL enabled outside Windows.
-
-	ldr lr,=WININOUTBUFF1
-	mov r0,#SCREEN_HEIGHT
-gfxWinLoop:						;@ 3 buffers
-	stmia lr!,{r1-r3}
-	stmia lr!,{r1-r3}
-	stmia lr!,{r1-r3}
-	subs r0,r0,#1
-	bne gfxWinLoop
-	ldmfd sp!,{pc}
+	bx lr
 ;@----------------------------------------------------------------------------
 paletteInit:		;@ r0-r3 modified.
 	.type paletteInit STT_FUNC
@@ -380,8 +370,6 @@ SCROLLBUFF1:
 	.space SCREEN_HEIGHT*8		;@ Scrollbuffer.
 SCROLLBUFF2:
 	.space SCREEN_HEIGHT*8		;@ Scrollbuffer.
-WININOUTBUFF1:
-	.space SCREEN_HEIGHT*12		;@ Scrollbuffer.
 MAPPED_RGB:
 	.space 0x2000				;@ 4096*2
 MAPPED_BNW:
