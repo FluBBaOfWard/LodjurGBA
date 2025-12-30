@@ -8,7 +8,7 @@ extern "C" {
 #include "Emubase.h"
 #include "Lynx.h"
 
-#define FILEEXTENSIONS ".lnx.lyx"
+#define FILEEXTENSIONS ".lnx.lyx.bin.o"
 
 extern ConfigData cfg;
 

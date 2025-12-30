@@ -1,4 +1,4 @@
-# LodjurGBA V0.1.2
+# LodjurGBA V0.1.4
 
 <img align="right" width="220" src="./logo.png" alt="The Lynx logo"/>
 
@@ -15,9 +15,9 @@ B to go back a step.
 ### File
 
 * Load Game: Select a game to load.
-* Load NVRAM: Load non volatile ram (EEPROM/SRAM) for the currently running game.
-* Save NVRAM: Save non volatile ram (EEPROM/SRAM) for the currently running game.
-* Save Settings: Save the current settings (and internal EEPROM).
+* Load NVRAM: Load non volatile ram (EEPROM) for the currently running game.
+* Save NVRAM: Save non volatile ram (EEPROM) for the currently running game.
+* Save Settings: Save the current settings.
 * Reset Game: Reset the currently running game.
 
 ### Controller
@@ -38,7 +38,7 @@ B to go back a step.
   * Max: Games can run up to 4 times normal speed (might change).
   * 50%: Game runs at half speed.
 * Autoload State: Toggle Savestate autoloading. Automagically load the savestate associated with the selected game.
-* Autoload NVRAM: Toggle EEPROM/SRAM autoloading. Automagically load the EEPROM/SRAM associated with the selected game.
+* Autoload NVRAM: Toggle EEPROM autoloading. Automagically load the EEPROM associated with the selected game.
 * Autosave Settings: This will save settings when leaving menu if any changes are made.
 * Autopause Game: Toggle if the game should pause when opening the menu.
 * Overclock EWRAM: Changes the waitstates on EWRAM between 2 and 1, might damage your GBA and uses more power, around 10% speedgain. Use at your own risk!
@@ -74,8 +74,7 @@ Put the GBA into sleepmode. START+SELECT wakes up from sleep mode (activated
 
 ## Games
 
-* Baseball Heroes. Doesn't start'
-* Gates of zendocon. Hangs if intro is not skipped.
+* Baseball Heroes. Doesn't start
 
 ## Credits
 

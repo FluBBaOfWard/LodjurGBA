@@ -16,7 +16,7 @@
 #include "ARMMikey/Version.h"
 #include "ARMSuzy/Version.h"
 
-#define EMUVERSION "V0.1.2 2025-01-22"
+#define EMUVERSION "V0.1.4 2025-12-30"
 
 void hacksInit(void);
 
@@ -36,6 +36,8 @@ static void swapABSet(void);
 static const char *getSwapABText(void);
 static void contrastSet(void);
 static const char *getContrastText(void);
+static void screenModeSet(void);
+static const char *getScreenModeText(void);
 
 const MItem dummyItems[] = {
 	{"", uiDummy},
@@ -65,6 +67,7 @@ const MItem ctrlItems[] = {
 	{"Swap A-B:   ", swapABSet, getSwapABText},
 };
 const MItem displayItems[] = {
+	{"Screen:", screenModeSet, getScreenModeText},
 	{"Gamma: ", gammaChange, getGammaText},
 	{"Contrast: ", contrastSet, getContrastText},
 	{"Border: ", borderSet, getBorderText},
@@ -118,6 +121,7 @@ u8 gRotation = 0;
 
 const char *const machTxt[]  = {"Auto", "Lynx", "Lynx II"};
 const char *const bordTxt[]  = {"Black", "Frame", "BG Color", "None"};
+const char *const scrModeTxt[]  = {"1:1", "Rot Left", "Rot Right", "Zoom"};
 
 /// This is called at the start of the emulator
 void setupGUI() {
@@ -143,7 +147,11 @@ void enterGUI() {
 /// This is called going from ui to emu.
 void exitGUI() {
 	setupEmuBorderPalette();
-	GFX_DISPCNT = MODE_3 | BG2_ON;
+	GFX_DISPCNT = MODE_3
+				| BG2_ON
+//				| WIN0_ON
+//				| WIN1_ON
+				;
 }
 
 void quickSelectGame() {
@@ -212,14 +220,20 @@ void debugIOUnmappedR(u16 port) {
 void debugIOUnmappedW(u8 val, u16 port) {
 	debugIO(port, val, "Unmapped W port:");
 }
+void debugIOMirroredR(u16 port) {
+	debugIO(port, 0, "Mirrored R port:");
+}
+void debugIOMirroredW(u16 port, u8 val) {
+	debugIO(port, val, "Mirrored W port:");
+}
 void debugDivideError() {
 	debugOutput("Divide Error.");
 }
 void debugUndefinedInstruction() {
 	debugOutput("Undefined Instruction.");
 }
-void debugCrashInstruction() {
-	debugOutput("CPU Crash! (0xF1)");
+void debugPowerOff() {
+	debugOutput("Power Off!");
 }
 
 void stepFrameUI() {
@@ -256,6 +270,18 @@ void contrastSet() {
 }
 const char *getContrastText() {
 	return brighTxt[gContrastValue];
+}
+
+/// Change screen mode
+void screenModeSet() {
+	gScreenMode++;
+	if (gScreenMode > 3) gScreenMode = 0;
+	gRotation = gScreenMode;
+	setScreenMode(gScreenMode);
+	settingsChanged = true;
+}
+const char *getScreenModeText() {
+	return scrModeTxt[gScreenMode];
 }
 
 void borderSet() {

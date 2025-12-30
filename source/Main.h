@@ -19,6 +19,7 @@ void waitVBlank(void);
 void pausVBlank(int count);
 
 void setEmuSpeed(int speed);
+void setPowerIsOn(bool power);
 void setupMenuPalette(void);
 
 #ifdef __cplusplus

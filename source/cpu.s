@@ -47,14 +47,9 @@ runStart:
 	bl refreshEMUjoypads
 	bl lnxSuzySetButtonData
 
-//	ldr m6502ptr,=m6502_0
-//	add r1,m6502ptr,#m6502Regs
-//	ldmia r1,{m6502nz-m6502pc,m6502zpage}	;@ Restore M6502 state
 	ldr mikptr,=mikey_0
 	bl mikSysUpdate
 ;@----------------------------------------------------------------------------
-//	add r0,m6502ptr,#m6502Regs
-//	stmia r0,{m6502nz-m6502pc}	;@ Save M6502 state
 
 	ldrh r0,waitCountOut
 	add r0,r0,#1
@@ -93,27 +88,37 @@ stepFrame:					;@ Return after 1 frame
 	.type stepFrame STT_FUNC
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r4-r11,lr}
-//	ldr m6502ptr,=m6502_0
-//	add r1,m6502ptr,#m6502Regs
-//	ldmia r1,{m6502nz-m6502pc,m6502zpage}	;@ Restore M6502 state
 	ldr mikptr,=mikey_0
 	bl mikSysUpdate
 ;@----------------------------------------------------------------------------
-//	add r0,m6502ptr,#m6502Regs
-//	stmia r0,{m6502nz-m6502pc}	;@ Save M6502 state
 
 	ldmfd sp!,{r4-r11,lr}
 	bx lr
 
 ;@----------------------------------------------------------------------------
-cpuInit:					;@ Called by machineInit
+cpuInit:					;@ Called by machineInit, sets M65C02 or R65C02
+	.type cpuInit STT_FUNC
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{lr}
+	stmfd sp!,{r4,lr}
+	mov r4,r0
 
 	ldr r0,=m6502_0
 	bl m6502Init
 
-	ldmfd sp!,{lr}
+	cmp r4,#HW_LYNX
+	bne isRockwell
+
+	ldr r0,=m6502_0
+	ldr r2,=op1CycNop
+	mov r4,#0xFF
+m65C02Loop:
+	mov r1,r4
+	bl m6502PatchOpcode
+	subs r4,r4,#8
+	bpl m65C02Loop
+
+isRockwell:
+	ldmfd sp!,{r4,lr}
 	bx lr
 ;@----------------------------------------------------------------------------
 cpuReset:					;@ Called by loadCart/resetGame

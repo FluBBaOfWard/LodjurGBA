@@ -17,6 +17,7 @@
 	.global gMachineSet
 	.global gMachine
 	.global gSOC
+	.global gHasHeader
 	.global cart_0
 
 	.global machineInit
@@ -33,6 +34,7 @@
 
 #ifdef EMBEDDED_ROM
 ROM_Space:
+//	.incbin "roms/7_GATES_LITE_FIN.LNX"
 //	.incbin "roms/A.P.B. - All Points Bulletin (1990).lnx"
 //	.incbin "roms/Baseball Heroes (USA).lyx"
 //	.incbin "roms/Batman Returns (1992).lnx"
@@ -43,6 +45,14 @@ ROM_Space:
 //	.incbin "roms/Ninja Gaiden (1990).lnx"
 //	.incbin "roms/Ninja Gaiden III - the Ancient Ship of Doom (1993).lnx"
 //	.incbin "roms/Shadow of the Beast (1992)[crc-2].lnx"
+//	.incbin "roms/Toki (1990).lnx"
+//	.incbin "roms/tests/audio.lnx"
+//	.incbin "roms/tests/audio2.lnx"
+//	.incbin "roms/tests/math.lnx"
+//	.incbin "roms/tests/memio.lnx"
+//	.incbin "roms/tests/timers.lnx"
+//	.incbin "roms/tests/uart.lnx"
+//	.incbin "roms/tests/uart2.lnx"
 ROM_SpaceEnd:
 LYNX_BIOS_INTERNAL:
 	.incbin "roms/lynxboot.img"
@@ -57,12 +67,9 @@ machineInit: 				;@ Called from C
 	stmfd sp!,{r4-r11,lr}
 
 #ifdef EMBEDDED_ROM
-	ldr r0,=romSize
-	ldr r1,=(ROM_SpaceEnd-ROM_Space)
-	str r1,[r0]
-	ldr r0,=romSpacePtr
-	ldr r1,=ROM_Space
-	str r1,[r0]
+	ldr r0,=ROM_Space
+	sub r0,r0,#64
+	bl loadGame
 	ldr r0,=biosSpace
 	ldr r1,=LYNX_BIOS_INTERNAL
 	mov r2,#0x200
@@ -72,6 +79,8 @@ machineInit: 				;@ Called from C
 	bl gfxInit
 //	bl ioInit
 	bl soundInit
+	ldr r0,=gMachine
+	ldrb r0,[r0]
 	bl cpuInit
 
 	ldmfd sp!,{r4-r11,lr}
@@ -86,11 +95,12 @@ loadCart: 					;@ Called from C
 	stmfd sp!,{r4-r11,lr}
 	ldr mikptr,=mikey_0
 
-	ldr r2,romSize
-	and r0,r2,#0x40				;@ Header present?
+	ldrb r0,gHasHeader
 	ldr r1,romSpacePtr
-	add r1,r1,r0
+	cmp r0,#0			;@ Header present?
+	addne r1,r1,#0x40
 	ldr r0,=cart_0
+	ldr r2,romSize
 	mov r3,#0x10000
 	bl cartReset
 
@@ -117,7 +127,7 @@ loadCart: 					;@ Called from C
 ;@----------------------------------------------------------------------------
 clearDirtyTiles:
 ;@----------------------------------------------------------------------------
-	ldr r0,=DIRTYTILES			;@ Clear RAM
+	ldr r0,=DIRTYTILES			;@ Clear dirty indicator
 	mov r1,#0x200/4
 	b memclr_
 
@@ -197,7 +207,9 @@ gMachine:
 	.byte HW_LYNX_II
 gSOC:
 	.byte SOC_HOWARD
-	.space 3					;@ alignment.
+gHasHeader:
+	.byte 0
+	.skip 2						;@ alignment.
 
 romSpacePtr:
 	.long 0x08000000

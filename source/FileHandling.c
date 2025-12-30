@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "FileHandling.h"
+#include "LNXHeader.h"
 #include "Emubase.h"
 #include "Main.h"
 #include "Shared/EmuMenu.h"
@@ -13,8 +14,11 @@
 #include "Gfx.h"
 #include "io.h"
 
+static bool checkLnxHeader(const LnxHeader *rHead);
+
 EWRAM_BSS int selectedGame = 0;
 EWRAM_BSS ConfigData cfg;
+EWRAM_BSS LnxHeader lnxHeader;
 
 //---------------------------------------------------------------------------------
 int initSettings() {
@@ -144,6 +148,10 @@ bool loadGame(const RomHeader *rh) {
 		gRomSize = rh->filesize;
 		romSpacePtr = (const u8 *)rh + sizeof(RomHeader);
 		selectedGame = selected;
+		setPowerIsOn(false);
+		if ((gHasHeader = checkLnxHeader((LnxHeader *)romSpacePtr))) {
+			gRomSize = lnxHeader.bank0PageSize << 8;
+		}
 		checkMachine(rh);
 //		setEmuSpeed(0);
 		loadCart();
@@ -154,7 +162,7 @@ bool loadGame(const RomHeader *rh) {
 		if (emuSettings & AUTOLOAD_STATE) {
 			loadState();
 		}
-		powerIsOn = true;
+		setPowerIsOn(true);
 		closeMenu();
 		return false;
 	}
@@ -168,6 +176,29 @@ void selectGame() {
 	if (loadGame(rh)) {
 		backOutOfMenu();
 	}
+}
+
+bool checkLnxHeader(const LnxHeader *lHead) {
+	bool isLNX = false;
+	if (lHead->magic[0] == 'L'
+			&& lHead->magic[1] == 'Y'
+			&& lHead->magic[2] == 'N'
+			&& lHead->magic[3] == 'X'
+			&& lHead->versionNumber == 1) {
+		isLNX = true;
+		memcpy(&lnxHeader, lHead, sizeof(LnxHeader));
+	}
+	else {
+		memset(&lnxHeader, 0, sizeof(LnxHeader));
+	}
+	int smRot = gScreenMode;
+	int headRot = lnxHeader.rotation;
+	if (headRot == 1 || headRot == 2) {
+		smRot = headRot;
+	}
+	gRotation = smRot;
+	setScreenMode(smRot);
+	return isLNX;
 }
 
 void checkMachine(const RomHeader *rh) {

@@ -24,7 +24,6 @@
 	.global lnxSuzySetButtonData
 	.global updateLCDRefresh
 	.global setScreenRefresh
-	.global lowerRefresh
 
 	.syntax unified
 	.arm
@@ -38,16 +37,26 @@
 ;@----------------------------------------------------------------------------
 gfxInit:					;@ Called from machineInit
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{lr}
+	stmfd sp!,{mikptr,lr}
+
+	ldr mikptr,=mikey_0
+	ldr r0,=lodjurRenderCallback
+	ldr r1,=gfxEndFrame
+	ldr r2,=lynxRAM
+	bl mikeyInit
+
+	ldr suzptr,=suzy_0
+	ldr r0,=lynxRAM
+	bl suzyInit
 
 	bl gfxWinInit
 
-	ldmfd sp!,{pc}
+	ldmfd sp!,{mikptr,lr}
 
 ;@----------------------------------------------------------------------------
 gfxReset:					;@ Called with CPU reset
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{lr}
+	stmfd sp!,{r4,lr}
 
 	ldr r0,=gfxState
 	mov r1,#5					;@ 5*4
@@ -60,14 +69,11 @@ gfxReset:					;@ Called with CPU reset
 
 	bl gfxWinInit
 
-	ldr r0,=lodjurRenderCallback
-	ldr r1,=gfxEndFrame
-	ldr r2,=lynxRAM
-	ldr r3,=gSOC
-	ldrb r3,[r3]
+	ldr r4,=gSOC
+	ldrb r0,[r4]
 	bl mikeyReset
 
-	ldr r0,=lynxRAM
+	ldrb r0,[r4]
 	bl suzyReset0
 
 	ldr r0,=gGammaValue
@@ -77,23 +83,23 @@ gfxReset:					;@ Called with CPU reset
 	bl paletteInit				;@ Do palette mapping
 	bl paletteTxAll				;@ Transfer it
 
-	ldmfd sp!,{pc}
+	ldmfd sp!,{r4,pc}
 
 ;@----------------------------------------------------------------------------
 gfxWinInit:
 ;@----------------------------------------------------------------------------
-	mov r0,#REG_BASE
+	mov r1,#REG_BASE
 	;@ Horizontal start-end
-	ldr r1,=(((SCREEN_WIDTH-GAME_WIDTH)/2)<<8)+(SCREEN_WIDTH+GAME_WIDTH)/2
-	orr r1,r1,r1,lsl#16			;@ Also WIN1H
-	str r1,[r0,#REG_WIN0H]
+	ldr r0,=(((SCREEN_WIDTH-GAME_WIDTH)/2)<<8)+(SCREEN_WIDTH+GAME_WIDTH)/2
+	orr r0,r0,r0,lsl#16			;@ Also WIN1H
+	str r0,[r1,#REG_WIN0H]
 	;@ Vertical start-end
-	ldr r2,=(((SCREEN_HEIGHT-GAME_HEIGHT)/2)<<8)+(SCREEN_HEIGHT+GAME_HEIGHT)/2
-	orr r2,r2,r2,lsl#16			;@ Also WIN1V
-	str r2,[r0,#REG_WIN0V]
+	ldr r0,=(((SCREEN_HEIGHT-GAME_HEIGHT)/2)<<8)+(SCREEN_HEIGHT+GAME_HEIGHT)/2
+	orr r0,r0,r0,lsl#16			;@ Also WIN1V
+	str r0,[r1,#REG_WIN0V]
 
-	ldr r3,=0x002C3B3B			;@ WinIN0/1, BG0, BG1, BG3, SPR & COL inside Win0
-	str r3,[r0,#REG_WININ]		;@ WinOUT, Only BG2, BG3 & COL enabled outside Windows.
+	ldr r0,=0x002b2c2c			;@ WinIN0/1, BG0, BG1, BG3, SPR & COL inside Win0
+	str r0,[r1,#REG_WININ]		;@ WinOUT, Only BG2, BG3 & COL enabled outside Windows.
 	bx lr
 ;@----------------------------------------------------------------------------
 paletteInit:		;@ r0-r3 modified.
@@ -166,7 +172,7 @@ paletteTx:					;@ r0=destination, mikptr=Mikey
 ;@----------------------------------------------------------------------------
 	ldr r1,=MAPPED_RGB
 	ldr r2,=0x1FFE
-	stmfd sp!,{r4-r8,lr}
+	stmfd sp!,{r4-r5,lr}
 	mov r5,#0
 
 	add r4,mikptr,#mikPalette
@@ -174,30 +180,30 @@ txLoop:
 	ldr r3,[r4],#4
 	and r3,r2,r3,lsl#1
 	ldrh r3,[r1,r3]
-	strh r3,[r0,r5]			;@ Background palette
+	strh r3,[r0,r5]				;@ Background palette
 
 	add r5,r5,#2
 	cmp r5,#0x20
 	bmi txLoop
 
-	ldmfd sp!,{r4-r8,lr}
+	ldmfd sp!,{r4-r5,lr}
 	bx lr
 
 ;@----------------------------------------------------------------------------
 lodjurRenderCallback:		;@ (u8 *ram, u32 *palette, bool flip, bool palChg)
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r4-r6,lr}
+	stmfd sp!,{r4-r5,lr}
 	ldr r5,=PAL_CACHE
 	cmp r3,#0
 	beq palCacheOk
 	ldr r4,=MAPPED_RGB
-	mov r6,#16
+	mov lr,#16
 palCacheLoop:
-	subs r6,r6,#1
-	ldr r3,[r1,r6,lsl#2]
+	subs lr,lr,#1
+	ldr r3,[r1,lr,lsl#2]
 	mov r3,r3,lsl#1
 	ldrh r3,[r4,r3]
-	str r3,[r5,r6,lsl#2]
+	str r3,[r5,lr,lsl#2]
 	bne palCacheLoop
 
 palCacheOk:
@@ -205,7 +211,17 @@ palCacheOk:
 
 	mov r4,#GAME_WIDTH/2
 	cmp r2,#0
+	adr lr,rendRet
 	bne rendLoopFlip
+	b rendLoop
+rendRet:
+	add r1,r1,#(SCREEN_WIDTH-GAME_WIDTH)*2
+	str r1,currentDest
+	ldmfd sp!,{r4-r5,pc}
+
+#ifdef GBA
+	.section .iwram, "ax", %progbits	;@ For the GBA
+#endif
 rendLoop:
 	ldrb r2,[r0],#1
 	and r3,r2,#0x0F
@@ -216,9 +232,7 @@ rendLoop:
 	str r3,[r1],#4
 	subs r4,r4,#1
 	bne rendLoop
-	add r1,r1,#(SCREEN_WIDTH-GAME_WIDTH)*2
-	str r1,currentDest
-	ldmfd sp!,{r4-r6,pc}
+	bx lr
 rendLoopFlip:
 	ldrb r2,[r0],#-1
 	and r3,r2,#0x0F
@@ -229,14 +243,19 @@ rendLoopFlip:
 	str r3,[r1],#4
 	subs r4,r4,#1
 	bne rendLoopFlip
-	add r1,r1,#(SCREEN_WIDTH-GAME_WIDTH)*2
-	str r1,currentDest
-	ldmfd sp!,{r4-r6,pc}
-
+	bx lr
+#ifdef GBA
+	.section .ewram, "ax", %progbits	;@ For the GBA
+#endif
 ;@----------------------------------------------------------------------------
 setScreenRefresh:			;@ r0 in = Lynx cycles per frame.
 ;@----------------------------------------------------------------------------
-	bx lr
+	mov r1,r0
+	ldr r0,=16000000*2			;@ Lynx main frequency = 16MHz
+	swi 0x060000				;@ Division r0/r1, r0=result, r1=remainder.
+	movs r0,r0,lsr#1
+	adc r0,r0,#0
+	b setTargetFPS
 
 ;@----------------------------------------------------------------------------
 //#ifdef GBA
@@ -291,17 +310,14 @@ gfxRefresh:					;@ Called from C when changing scaling.
 	.type gfxRefresh STT_FUNC
 ;@----------------------------------------------------------------------------
 ;@----------------------------------------------------------------------------
-gfxEndFrame:				;@ Called just after screen end (line 144)	(r0-r3 safe to use)
+gfxEndFrame:				;@ Called just before screen end (~line 102) (r0-r3 safe to use)
 ;@----------------------------------------------------------------------------
-	stmfd sp!,{r4-r8,lr}
+	stmfd sp!,{r3,lr}
 
 	ldr r0,=(((SCREEN_HEIGHT-GAME_HEIGHT)/2) * SCREEN_WIDTH * 2)
 	add r0,r0,#SCREEN_WIDTH-GAME_WIDTH
 	add r0,r0,#0x06000000
 	str r0,currentDest
-
-	bl paletteTxAll
-;@--------------------------
 
 	mov r0,#1
 	strb r0,frameDone
@@ -315,13 +331,12 @@ gfxEndFrame:				;@ Called just after screen end (line 144)	(r0-r3 safe to use)
 	add r1,r1,#1
 	str r1,frameTotal
 
-	ldmfd sp!,{r4-r8,lr}
+	ldmfd sp!,{r3,lr}
 	bx lr
 
 ;@----------------------------------------------------------------------------
 frameTotal:		.long 0			;@ Let Gui.c see frame count for savestates
 
-tmpScroll:		.long SCROLLBUFF1
 dmaScroll:		.long SCROLLBUFF2
 
 gFlicker:		.byte 1
@@ -349,7 +364,7 @@ gfxState:
 currentDest:
 	.long 0
 	.long 0
-	.long 0,0,0
+	.long 0,0
 lcdSkip:
 	.long 0
 
@@ -372,16 +387,16 @@ SCROLLBUFF2:
 	.space SCREEN_HEIGHT*8		;@ Scrollbuffer.
 MAPPED_RGB:
 	.space 0x2000				;@ 4096*2
-MAPPED_BNW:
-	.space 0x20
 EMUPALBUFF:
 	.space 0x400
-PAL_CACHE:
-	.space 0x40					;@ 16*4
 
-#ifdef GBA
+#ifdef NDS
+	.section .dtcm, "ax", %progbits			;@ For the NDS
+#elif GBA
 	.section .bss				;@ This is IWRAM on GBA with devkitARM
 #endif
+PAL_CACHE:
+	.space 0x40					;@ 16*4
 ;@----------------------------------------------------------------------------
 suzy_0:
 	.space suzySize

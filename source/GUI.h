@@ -33,9 +33,11 @@ void debugIOUnmappedR(u16 port);
 void debugIOUnmappedW(u8 val, u16 port);
 void debugIOUnimplR(u16 port);
 void debugIOUnimplW(u8 val, u16 port);
+void debugIOMirroredR(u16 port);
+void debugIOMirroredW(u16 port, u8 val);
 void debugDivideError(void);
 void debugUndefinedInstruction(void);
-void debugCrashInstruction(void);
+void debugPowerOff(void);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -1,5 +1,6 @@
 LodjurDS Todo
 
+	#3 Check header less roms. (lnx/lyx).
 	Add audio code.
 	Find speed hacks.
 

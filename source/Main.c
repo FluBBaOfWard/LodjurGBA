@@ -133,17 +133,38 @@ void setEmuSpeed(int speed) {
 }
 
 //---------------------------------------------------------------------------------
+void setPowerIsOn(bool power) {
+//---------------------------------------------------------------------------------
+	if (powerIsOn != power) {
+		powerIsOn = power;
+		if (!powerIsOn) {
+			debugPowerOff();
+		}
+		if (gMachine == HW_LYNX_II) {
+			u32 *src = (u32 *)TILE_BASE_ADR(0);
+			u32 *dst = (u32 *)(TILE_BASE_ADR(0) + 16 + 256*32);
+			if (powerIsOn) {
+				src += 4;
+			}
+			for (int y=0; y<8; y++) {
+				for (int x=0; x<4; x++) {
+//					*dst++ = *src++;
+				}
+				src += 124;
+				dst += 124;
+			}
+		}
+	}
+}
+
+//---------------------------------------------------------------------------------
 static void setupGraphics() {
 //---------------------------------------------------------------------------------
 
 	// Set up the display
 	GFX_DISPCNT = MODE_0
-				| OBJ_1D_MAP
-				| BG0_ON
-				| BG1_ON
 				| BG2_ON
 				| BG3_ON
-				| OBJ_ON
 //				| WIN0_ON
 //				| WIN1_ON
 				;
