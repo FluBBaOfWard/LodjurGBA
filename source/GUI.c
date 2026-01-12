@@ -16,7 +16,7 @@
 #include "ARMMikey/Version.h"
 #include "ARMSuzy/Version.h"
 
-#define EMUVERSION "V0.1.4 2025-12-30"
+#define EMUVERSION "V0.1.4 2026-01-12"
 
 void hacksInit(void);
 
@@ -46,8 +46,8 @@ const MItem mainItems[] = {
 	{"File->", ui2},
 	{"Controller->", ui3},
 	{"Display->", ui4},
-	{"Settings->", ui5},
-	{"Machine->", ui6},
+	{"Machine->", ui5},
+	{"Settings->", ui6},
 	{"Debug->", ui7},
 	{"About->", ui8},
 	{"Sleep", gbaSleep},
@@ -72,6 +72,12 @@ const MItem displayItems[] = {
 	{"Contrast: ", contrastSet, getContrastText},
 	{"Border: ", borderSet, getBorderText},
 };
+const MItem machineItems[] = {
+	{"Machine: ", machineSet, getMachineText},
+	{"Cpu Speed Hacks: ", speedHackSet, getSpeedHackText},
+	{"Half Cpu Speed: ", cpuHalfSet},
+	{"Sound: ", soundSet, getSoundEnableText},
+};
 const MItem setItems[] = {
 	{"Speed: ", speedSet, getSpeedText},
 	{"Autoload State: ", autoStateSet, getAutoStateText},
@@ -80,15 +86,8 @@ const MItem setItems[] = {
 	{"EWRAM Overclock: ", ewramSet, getEWRAMText},
 	{"Autosleep: ", sleepSet, getSleepText},
 };
-const MItem machineItems[] = {
-	{"Machine: ", machineSet, getMachineText},
-	{"Cpu Speed Hacks: ", speedHackSet, getSpeedHackText},
-	{"Half Cpu Speed: ", cpuHalfSet},
-	{"Sound: ", soundSet, getSoundEnableText},
-	//{"", languageSet},
-};
 const MItem debugItems[] = {
-	{"Debug Output:", debugTextSet, getDebugText},
+	{"Debug Output: ", debugTextSet, getDebugText},
 	{"Step Frame", stepFrameUI},
 };
 const MItem fnList9[] = {
@@ -104,8 +103,8 @@ Menu menu1 = MENU_M("Main Menu", uiAuto, mainItems);
 const Menu menu2 = MENU_M("File Handling", uiAuto, fileItems);
 const Menu menu3 = MENU_M("Controller Settings", uiAuto, ctrlItems);
 const Menu menu4 = MENU_M("Display Settings", uiAuto, displayItems);
-const Menu menu5 = MENU_M("Other Settings", uiAuto, setItems);
-const Menu menu6 = MENU_M("Machine Settings", uiAuto, machineItems);
+const Menu menu5 = MENU_M("Machine Settings", uiAuto, machineItems);
+const Menu menu6 = MENU_M("Other Settings", uiAuto, setItems);
 const Menu menu7 = MENU_M("Debug", uiAuto, debugItems);
 const Menu menu8 = MENU_M("About", uiAbout, dummyItems);
 const Menu menu9 = MENU_M("Load game", uiLoadGame, fnList9);
@@ -113,7 +112,6 @@ const Menu menu10 = MENU_M("Quit Emulator?", uiAuto, quitItems);
 
 const Menu *const menus[] = {&menu0, &menu1, &menu2, &menu3, &menu4, &menu5, &menu6, &menu7, &menu8, &menu9, &menu10 };
 
-u8 gGammaValue = 0;
 u8 gContrastValue = 3;
 u8 gBorderEnable = 1;
 u8 gScreenMode = 0;

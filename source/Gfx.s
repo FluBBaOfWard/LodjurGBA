@@ -12,7 +12,6 @@
 	.global GFX_BG1CNT
 	.global EMUPALBUFF
 	.global frameTotal
-	.global suzy_0
 
 	.global gfxInit
 	.global gfxReset
@@ -190,7 +189,7 @@ txLoop:
 	bx lr
 
 ;@----------------------------------------------------------------------------
-lodjurRenderCallback:		;@ (u8 *ram, u32 *palette, bool flip, bool palChg)
+lodjurRenderCallback:		;@ (const u8 *ram, const u32 *palette, bool flip, bool palChg)
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r4-r5,lr}
 	ldr r5,=PAL_CACHE
@@ -358,7 +357,7 @@ lnxSuzySetButtonData:
 	ldr suzptr,=suzy_0
 	b suzySetButtonData
 ;@----------------------------------------------------------------------------
-	.section .ewram, "ax"
+	.section .ewram, "a", %progbits
 
 gfxState:
 currentDest:
@@ -391,15 +390,12 @@ EMUPALBUFF:
 	.space 0x400
 
 #ifdef NDS
-	.section .dtcm, "ax", %progbits			;@ For the NDS
+	.section .sbss				;@ This is DTCM on NDS with devkitARM
 #elif GBA
 	.section .bss				;@ This is IWRAM on GBA with devkitARM
 #endif
 PAL_CACHE:
 	.space 0x40					;@ 16*4
-;@----------------------------------------------------------------------------
-suzy_0:
-	.space suzySize
 ;@----------------------------------------------------------------------------
 	.end
 #endif // #ifdef __arm__

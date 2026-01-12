@@ -39,8 +39,8 @@ GRAPHICS	:=	source/Shared/graphics \
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
-ARCH	:=	-mthumb -mthumb-interwork -march=armv4t -mcpu=arm7tdmi -mtune=arm7tdmi
-FLAGS	:=	-DGBA -DW65C02
+ARCH	:=	-march=armv4t -mcpu=arm7tdmi -mtune=arm7tdmi -mthumb -mthumb-interwork
+FLAGS	:=	-DGBA -DR65C02
 
 ifeq ($(DEBUG),1)
 	CFLAGS	:=	-gdwarf-2 -Wall -ffast-math $(ARCH)

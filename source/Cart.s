@@ -35,6 +35,7 @@
 #ifdef EMBEDDED_ROM
 ROM_Space:
 //	.incbin "roms/7_GATES_LITE_FIN.LNX"
+//	.incbin "roms/Alien vs Predator (prototype) (1993) [!].lnx"
 //	.incbin "roms/A.P.B. - All Points Bulletin (1990).lnx"
 //	.incbin "roms/Baseball Heroes (USA).lyx"
 //	.incbin "roms/Batman Returns (1992).lnx"
@@ -48,6 +49,7 @@ ROM_Space:
 //	.incbin "roms/Toki (1990).lnx"
 //	.incbin "roms/tests/audio.lnx"
 //	.incbin "roms/tests/audio2.lnx"
+//	.incbin "roms/tests/cpu.lnx"
 //	.incbin "roms/tests/math.lnx"
 //	.incbin "roms/tests/memio.lnx"
 //	.incbin "roms/tests/timers.lnx"
@@ -58,7 +60,7 @@ LYNX_BIOS_INTERNAL:
 	.incbin "roms/lynxboot.img"
 #endif
 
-	.section .ewram,"ax"
+	.section .ewram, "ax", %progbits
 	.align 2
 ;@----------------------------------------------------------------------------
 machineInit: 				;@ Called from C
@@ -86,7 +88,7 @@ machineInit: 				;@ Called from C
 	ldmfd sp!,{r4-r11,lr}
 	bx lr
 
-	.section .ewram,"ax"
+	.section .ewram, "ax", %progbits
 	.align 2
 ;@----------------------------------------------------------------------------
 loadCart: 					;@ Called from C
