@@ -15,6 +15,7 @@
 
 	.global gfxInit
 	.global gfxReset
+	.global gfxWinInit
 	.global paletteInit
 	.global paletteTxAll
 	.global gfxRefresh
@@ -84,21 +85,34 @@ gfxReset:					;@ Called with CPU reset
 
 	ldmfd sp!,{r4,pc}
 
+#define ZOOM_VAL ((GAME_WIDTH<<8)/(SCREEN_WIDTH-1))
+
+winLayouts: // Horizontal, Vertical
+	.short (((SCREEN_WIDTH-GAME_WIDTH)/2)<<8)+(SCREEN_WIDTH+GAME_WIDTH)/2
+	.short (((SCREEN_HEIGHT-GAME_HEIGHT)/2)<<8)+(SCREEN_HEIGHT+GAME_HEIGHT)/2
+	.short (((SCREEN_WIDTH-GAME_HEIGHT)/2)<<8)+(SCREEN_WIDTH+GAME_HEIGHT)/2
+	.short (((SCREEN_HEIGHT-GAME_WIDTH)/2)<<8)+(SCREEN_HEIGHT+GAME_WIDTH)/2
+	.short (((SCREEN_WIDTH-GAME_HEIGHT)/2)<<8)+(SCREEN_WIDTH+GAME_HEIGHT)/2
+	.short (((SCREEN_HEIGHT-GAME_WIDTH)/2)<<8)+(SCREEN_HEIGHT+GAME_WIDTH)/2
+	.short (0<<8)+SCREEN_WIDTH
+	.short (((SCREEN_HEIGHT-((GAME_HEIGHT<<8)/ZOOM_VAL))/2)<<8) + ((SCREEN_HEIGHT+((GAME_HEIGHT<<8)/ZOOM_VAL))/2)
 ;@----------------------------------------------------------------------------
 gfxWinInit:
+	.type gfxWinInit STT_FUNC
 ;@----------------------------------------------------------------------------
-	mov r1,#REG_BASE
+	mov r0,#REG_BASE
+	adr r2,winLayouts
+	ldr r1,=gRotation
+	ldrb r1,[r1]
+	ldr r1,[r2,r1,lsl#2]
 	;@ Horizontal start-end
-	ldr r0,=(((SCREEN_WIDTH-GAME_WIDTH)/2)<<8)+(SCREEN_WIDTH+GAME_WIDTH)/2
-	orr r0,r0,r0,lsl#16			;@ Also WIN1H
-	str r0,[r1,#REG_WIN0H]
+	strh r1,[r0,#REG_WIN0H]
 	;@ Vertical start-end
-	ldr r0,=(((SCREEN_HEIGHT-GAME_HEIGHT)/2)<<8)+(SCREEN_HEIGHT+GAME_HEIGHT)/2
-	orr r0,r0,r0,lsl#16			;@ Also WIN1V
-	str r0,[r1,#REG_WIN0V]
+	mov r1,r1,lsr#16
+	strh r1,[r0,#REG_WIN0V]
 
-	ldr r0,=0x002b2c2c			;@ WinIN0/1, BG0, BG1, BG3, SPR & COL inside Win0
-	str r0,[r1,#REG_WININ]		;@ WinOUT, Only BG2, BG3 & COL enabled outside Windows.
+	ldr r1,=0x00282c2c			;@ WinIN0/1, BG2, BG3 & COL inside Win0
+	str r1,[r0,#REG_WININ]		;@ WinOUT, Only BG2, BG3 & COL enabled outside Windows.
 	bx lr
 ;@----------------------------------------------------------------------------
 paletteInit:		;@ r0-r3 modified.
@@ -164,7 +178,7 @@ gammaConvert:	;@ Takes value in r0(0-0xFF), gamma in r1(0-4),returns new value i
 paletteTxAll:				;@ Called from ui.c
 	.type paletteTxAll STT_FUNC
 ;@----------------------------------------------------------------------------
-	ldr r0,=EMUPALBUFF
+	ldr r0,=EMUPALBUFF+0x20
 	ldr mikptr,=mikey_0
 ;@----------------------------------------------------------------------------
 paletteTx:					;@ r0=destination, mikptr=Mikey

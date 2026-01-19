@@ -15,9 +15,11 @@ extern u16 GFX_BG0CNT;
 extern u16 GFX_BG1CNT;
 
 void gfxInit(void);
+void gfxWinInit(void);
 void lodjurRenderCallback(const u8 *source, const u32 *palette, bool flip, bool palChg);
 void vblIrqHandler(void);
 void paletteInit(u8 gammaVal, u8 contrast);
+void paletteTxAll(void);
 void updateLCDRefresh(void);
 void gfxRefresh(void);
 void lowerRefresh(void);

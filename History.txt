@@ -1,16 +1,16 @@
 LodjurGBA revision history
 -=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-V0.1.4 - 2026-01-12 (FluBBa)
+V0.1.4 - 2026-01-19 (FluBBa)
 	Added CPU differences between Lynx & Lynx II.
 	Added Mikey & Suzy revision differences between Lynx & Lynx II.
 	Added power off from code.
 	Added some Suzy register mirrors.
 	Added display rotation and zoom.
+	Added scrolling to menus.
 	Fixed Math flags.
 	Fixed Timer7.
 	Optimizations to rendering.
-	Added scrolling to menus.
 
 V0.1.2 - 2025-01-22 (FluBBa)
 	Fixed initial palette.

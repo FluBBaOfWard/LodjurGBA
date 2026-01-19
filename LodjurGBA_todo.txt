@@ -1,6 +1,8 @@
-LodjurDS Todo
+LodjurGBA Todo
 
-	#3 Check header less roms. (lnx/lyx).
+	Add 16 colour renderer.
+	Add flicker for zoomed in image.
+	Add EEPROM support for homebrew.
 	Add audio code.
 	Find speed hacks.
 
@@ -47,11 +49,12 @@ Games with different refresh rate:
 
 Games Not Working:
 	Baseball Heroes. (EEPROM?)
-	Gates of zendocon.  Hangs in intro. Writes 0x40? Expects some sound thing?
 	Rampage. Hangs on title screen after some time?
 
 Games Not Working Fixed:
+	Dirty Larry, requires Timer7 to end intro correctly.
 	Double Dragon requires Timer4.
+	Gates of zendocon.  Hangs in intro. Writes 0x40? Expects some sound thing?
 	Gauntlet - Expects Timer 1 to not run when enabled but without reload.
 	Pit FIghter. Hangs in demo mode after some time. UART TX needs to work.
 

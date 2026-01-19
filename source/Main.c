@@ -52,9 +52,9 @@ int main(int argc, char **argv) {
 	irqInit();
 	irqEnable(IRQ_VBLANK);
 	showSplash(getSplashScreen(LNXID));
+	irqSet(IRQ_VBLANK, myVBlank);
 
 	setupGraphics();
-	irqSet(IRQ_VBLANK, myVBlank);
 	setupGUI();
 	getInput();
 	initSettings();
@@ -74,11 +74,11 @@ int main(int argc, char **argv) {
 
 	while (1) {
 		waitVBlank();
-//		checkTimeOut();
 		guiRunLoop();
 		if (powerIsOn && !pauseEmulation) {
 			run();
 		}
+//		checkTimeOut();
 	}
 }
 

@@ -7,6 +7,10 @@ extern "C" {
 
 #define LNXID 0x1A584C41		// "ALX",0x1A - Lynx
 
+#define HALF_CPU_SPEED		(1<<16)
+#define ALLOW_SPEED_HACKS	(1<<17)
+#define ENABLE_HEADPHONES	(1<<18)
+
 typedef struct {
 	const u32 identifier;		// LNXID
 	const u32 filesize;
@@ -24,8 +28,8 @@ typedef struct {				//(config struct)
 	u8 gammaValue;				// from gfx.s
 	u8 config;					// from cart.s
 	u8 controller;				// from io.s
-	u8 language;
-	u8 palette;
+	u8 contrastValue;			// from gfx.s
+	u8 machine;
 	char currentPath[256];
 } ConfigData;
 

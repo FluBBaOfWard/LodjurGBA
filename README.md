@@ -22,13 +22,22 @@ B to go back a step.
 
 ### Controller
 
-* Autofire: Select if you want autofire.
+* B Autofire: Select if you want autofire on button B.
+* A Autofire: Select if you want autofire on button A.
 * Swap A-B: Swap which GBA button is mapped to which Lynx button.
 
 ### Display
 
+* Screen: Select rotation & zoom.
 * Gamma: Lets you change the gamma ("brightness").
 * Contrast: Lets you change the contrast.
+
+### Machine
+
+* Machine: Select the emulated machine.
+* Cpu speed hacks: Allow speed hacks.
+* Half Cpu Speed: Just half the emulated cpu speed.
+* Sound: Turn sound emulation on/off.
 
 ### Settings
 
@@ -37,19 +46,16 @@ B to go back a step.
   * 200%: Game runs at double speed.
   * Max: Games can run up to 4 times normal speed (might change).
   * 50%: Game runs at half speed.
-* Autoload State: Toggle Savestate autoloading. Automagically load the savestate associated with the selected game.
-* Autoload NVRAM: Toggle EEPROM autoloading. Automagically load the EEPROM associated with the selected game.
+* Autoload State: Toggle Savestate autoloading. Automagically load the
+ savestate associated with the selected game.
+* Autoload NVRAM: Toggle EEPROM autoloading. Automagically load the EEPROM
+ associated with the selected game.
 * Autosave Settings: This will save settings when leaving menu if any changes are made.
 * Autopause Game: Toggle if the game should pause when opening the menu.
-* Overclock EWRAM: Changes the waitstates on EWRAM between 2 and 1, might damage your GBA and uses more power, around 10% speedgain. Use at your own risk!
+* Overclock EWRAM: Changes the waitstates on EWRAM between 2 and 1, might
+ damage your GBA and uses more power, around 10% speedgain. Doesn't work on
+ Gameboy Micro. Use at your own risk!
 * Autosleep: Change the autosleep time, also see Sleep.
-
-### Machine
-
-* Machine: Select the emulated machine.
-* Cpu speed hacks: Allow speed hacks.
-* Half Cpu Speed: Just half the emulated cpu speed.
-* Sound: Turn sound emulation on/off.
 
 ### Debug
 

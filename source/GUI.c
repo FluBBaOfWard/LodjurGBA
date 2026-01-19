@@ -16,7 +16,7 @@
 #include "ARMMikey/Version.h"
 #include "ARMSuzy/Version.h"
 
-#define EMUVERSION "V0.1.4 2026-01-12"
+#define EMUVERSION "V0.1.4 2026-01-19"
 
 void hacksInit(void);
 
@@ -26,12 +26,10 @@ static const char *getMachineText(void);
 static void speedHackSet(void);
 static const char *getSpeedHackText(void);
 static void cpuHalfSet(void);
-static void borderSet(void);
-static const char *getBorderText(void);
+static const char *getCpuHalfText(void);
+//static void borderSet(void);
+//static const char *getBorderText(void);
 static void soundSet(void);
-static void stepFrameUI(void);
-//static const char *getControllerText(void);
-//static const char *getJoyMappingText(void);
 static void swapABSet(void);
 static const char *getSwapABText(void);
 static void contrastSet(void);
@@ -70,12 +68,12 @@ const MItem displayItems[] = {
 	{"Screen:", screenModeSet, getScreenModeText},
 	{"Gamma: ", gammaChange, getGammaText},
 	{"Contrast: ", contrastSet, getContrastText},
-	{"Border: ", borderSet, getBorderText},
+//	{"Border: ", borderSet, getBorderText},
 };
 const MItem machineItems[] = {
 	{"Machine: ", machineSet, getMachineText},
 	{"Cpu Speed Hacks: ", speedHackSet, getSpeedHackText},
-	{"Half Cpu Speed: ", cpuHalfSet},
+	{"Half Cpu Speed: ", cpuHalfSet, getCpuHalfText},
 	{"Sound: ", soundSet, getSoundEnableText},
 };
 const MItem setItems[] = {
@@ -88,7 +86,7 @@ const MItem setItems[] = {
 };
 const MItem debugItems[] = {
 	{"Debug Output: ", debugTextSet, getDebugText},
-	{"Step Frame", stepFrameUI},
+	{"Step Frame", stepFrame},
 };
 const MItem fnList9[] = {
 	{"", quickSelectGame},
@@ -138,7 +136,6 @@ void enterGUI() {
 				| BG3_ON
 				| OBJ_ON
 				| WIN0_ON
-				| WIN1_ON
 				;
 }
 
@@ -147,8 +144,7 @@ void exitGUI() {
 	setupEmuBorderPalette();
 	GFX_DISPCNT = MODE_3
 				| BG2_ON
-//				| WIN0_ON
-//				| WIN1_ON
+				| WIN0_ON
 				;
 }
 
@@ -234,10 +230,6 @@ void debugPowerOff() {
 	debugOutput("Power Off!");
 }
 
-void stepFrameUI() {
-	stepFrame();
-	setupMenuPalette();
-}
 //---------------------------------------------------------------------------------
 /// Swap A & B buttons
 void swapABSet() {
@@ -276,12 +268,13 @@ void screenModeSet() {
 	if (gScreenMode > 3) gScreenMode = 0;
 	gRotation = gScreenMode;
 	setScreenMode(gScreenMode);
+	gfxWinInit();
 	settingsChanged = true;
 }
 const char *getScreenModeText() {
 	return scrModeTxt[gScreenMode];
 }
-
+/*
 void borderSet() {
 	gBorderEnable ^= 0x01;
 	setupEmuBorderPalette();
@@ -290,7 +283,7 @@ void borderSet() {
 const char *getBorderText() {
 	return bordTxt[gBorderEnable];
 }
-
+*/
 void machineSet() {
 	gMachineSet++;
 	if (gMachineSet >= HW_SELECT_END) {
@@ -313,6 +306,9 @@ void cpuHalfSet() {
 	emuSettings ^= HALF_CPU_SPEED;
 	emuSettings &= ~ALLOW_SPEED_HACKS;
 //	tweakCpuSpeed(emuSettings & HALF_CPU_SPEED);
+}
+const char *getCpuHalfText() {
+	return autoTxt[(emuSettings & HALF_CPU_SPEED)>>16];
 }
 
 void soundSet() {

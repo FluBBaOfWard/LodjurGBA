@@ -176,7 +176,11 @@ soundLatch:
 	.byte 0
 	.space 2
 
-	.section .sbss
+#ifdef GBA
+	.section .sbss				;@ This is EWRAM on GBA with devkitARM
+#else
+	.section .bss
+#endif
 	.align 2
 //FREQTBL:
 //	.space 1024*2

@@ -1,10 +1,10 @@
 #ifdef __arm__
 
-//#define EMBEDDED_ROM
-
 #include "ARMSuzy/ARMSuzy.i"
 #include "ARMMikey/ARMMikey.i"
 #include "LynxCart/LynxCart.i"
+
+//#define EMBEDDED_ROM
 
 	.global cartFlags
 	.global romSpacePtr

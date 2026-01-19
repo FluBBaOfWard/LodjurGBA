@@ -14,6 +14,9 @@
 #include "cpu.h"
 #include "io.h"
 
+/// Used for emulators or flashcarts to choose save type.
+const char *const sramTag = "SRAM_Vnnn";
+
 static bool checkLnxHeader(const LnxHeader *rHead);
 
 EWRAM_BSS int selectedGame = 0;
@@ -21,71 +24,55 @@ EWRAM_BSS ConfigData cfg;
 EWRAM_BSS LnxHeader lnxHeader;
 
 //---------------------------------------------------------------------------------
-int initSettings() {
-	cfg.config = 0;
-	cfg.palette = 0;
-	cfg.gammaValue = 0x20;
-	cfg.emuSettings = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM | ALLOW_SPEED_HACKS;
-	cfg.sleepTime = 60*60*5;
-	cfg.controller = 0;					// Don't swap A/B
-//	cfg.language = (PersonalData->language == 0) ? 0 : 1;
+void applyConfigData(void) {
+	emuSettings    = cfg.emuSettings & ~EMUSPEED_MASK; // Clear speed setting.
+	gBorderEnable  = (cfg.config & 1) ^ 1;
+	gGammaValue    = cfg.gammaValue;
+	gContrastValue = cfg.contrastValue;
+	sleepTime      = cfg.sleepTime;
+	gMachineSet    = cfg.machine;
+	joyCfg         = (joyCfg & ~0x400) | ((cfg.controller & 1) << 10);
+//	pauseEmulation = emuSettings & AUTOPAUSE_EMULATION;
+}
 
-	return 0;
+void updateConfigData(void) {
+	strcpy(cfg.magic, "cfg");
+	cfg.emuSettings   = emuSettings & ~EMUSPEED_MASK;	// Clear speed setting.
+	cfg.config        = (gBorderEnable & 1) ^ 1;
+	cfg.gammaValue    = gGammaValue;
+	cfg.contrastValue = gContrastValue;
+	cfg.sleepTime     = sleepTime;
+	cfg.machine       = gMachineSet;
+	cfg.controller    = (joyCfg >> 10) & 1;
+}
+
+void initSettings() {
+	memset(&cfg, 0, sizeof(ConfigData));
+	cfg.emuSettings   = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM | ALLOW_SPEED_HACKS;
+	cfg.contrastValue = 3;
+	cfg.sleepTime     = 60*60*5;
+	cfg.machine       = HW_AUTO;
+
+	applyConfigData();
 }
 
 int loadSettings() {
-//	FILE *file;
-/*
-	if (findFolder(folderName)) {
-		return 1;
-	}
-	if ((file = fopen(settingName, "r"))) {
-		fread(&cfg, 1, sizeof(configdata), file);
-		fclose(file);
-		if (!strstr(cfg.magic,"cfg")) {
-			infoOutput("Error in settings file.");
-			return 1;
-		}
+	bytecopy_((u8 *)&cfg, (u8 *)SRAM+0x10000-sizeof(ConfigData), sizeof(ConfigData));
+	if (strstr(cfg.magic, "cfg")) {
+		applyConfigData();
+		infoOutput("Settings loaded.");
+		return 0;
 	}
 	else {
-		infoOutput("Couldn't open file:");
-		infoOutput(settingName);
-		return 1;
+		updateConfigData();
+		infoOutput("Error in settings file.");
 	}
-*/
-	gBorderEnable = (cfg.config & 1) ^ 1;
-	gGammaValue   = cfg.gammaValue & 0xF;
-	gContrastValue = (cfg.gammaValue>>4) & 0xF;
-	emuSettings = cfg.emuSettings & ~EMUSPEED_MASK;	// Clear speed setting.
-	sleepTime   = cfg.sleepTime;
-	joyCfg      = (joyCfg&~0x400)|((cfg.controller&1)<<10);
-//	strlcpy(currentDir, cfg.currentPath, sizeof(currentDir));
-
-	infoOutput("Settings loaded.");
-	return 0;
+	return 1;
 }
 void saveSettings() {
-//	FILE *file;
+	updateConfigData();
 
-	strcpy(cfg.magic,"cfg");
-	cfg.gammaValue  = (gGammaValue & 0xF) | (gContrastValue<<4);
-	cfg.emuSettings = emuSettings & ~EMUSPEED_MASK;	// Clear speed setting.
-	cfg.sleepTime   = sleepTime;
-	cfg.controller  = (joyCfg>>10)&1;
-//	strlcpy(cfg.currentPath, currentDir, sizeof(currentDir));
-/*
-	if (findFolder(folderName)) {
-		return;
-	}
-	if ((file = fopen(settingName, "w"))) {
-		fwrite(&cfg, 1, sizeof(configdata), file);
-		fclose(file);
-		infoOutput("Settings saved.");
-	}
-	else {
-		infoOutput("Couldn't open file:");
-		infoOutput(settingName);
-	}*/
+	bytecopy_((u8 *)SRAM+0x10000-sizeof(ConfigData), (u8 *)&cfg, sizeof(ConfigData));
 	infoOutput("Settings saved.");
 }
 
@@ -204,11 +191,13 @@ bool checkLnxHeader(const LnxHeader *lHead) {
 }
 
 void checkMachine(const RomHeader *rh) {
-	if (gMachineSet == HW_AUTO) {
-		gMachine = HW_LYNX_II;
+	u8 newMachine = gMachineSet;
+	if (newMachine == HW_AUTO) {
+		newMachine = HW_LYNX_II;
 	}
-	else {
-		gMachine = gMachineSet;
+	if (gMachine != newMachine) {
+		gMachine = newMachine;
+		cpuInit(gMachine);
+		setupEmuBackground();
 	}
-	setupEmuBackground();
 }

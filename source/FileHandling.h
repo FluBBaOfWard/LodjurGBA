@@ -12,7 +12,7 @@ extern "C" {
 
 extern ConfigData cfg;
 
-int initSettings(void);
+void initSettings(void);
 int loadSettings(void);
 void saveSettings(void);
 bool loadGame(const RomHeader *rh);
