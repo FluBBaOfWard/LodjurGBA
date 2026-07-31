@@ -29,4 +29,4 @@ void lnxSuzySetButtonData(u16 value);
 } // extern "C"
 #endif
 
-#endif // GFX_HEADER
+#endif // !GFX_HEADER

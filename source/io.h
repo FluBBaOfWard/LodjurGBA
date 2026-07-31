@@ -32,4 +32,4 @@ int ioGetStateSize(void);
 } // extern "C"
 #endif
 
-#endif	// IO_HEADER
+#endif // !IO_HEADER

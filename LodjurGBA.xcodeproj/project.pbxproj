@@ -34,6 +34,7 @@
 		9C50820F25D45A9B00A8E1BA /* Cart.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = Cart.s; sourceTree = "<group>"; };
 		9C50821125D45A9B00A8E1BA /* Gfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gfx.h; sourceTree = "<group>"; };
 		9C715146265661CE0084BE99 /* Memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Memory.h; sourceTree = "<group>"; };
+		9C7CC88B2F6F156F00A49004 /* Builder.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = Builder.html; sourceTree = "<group>"; };
 		9C974A822D27D33C004E8EE8 /* LynxBorder.grit */ = {isa = PBXFileReference; lastKnownFileType = text; path = LynxBorder.grit; sourceTree = "<group>"; };
 		9C974A832D27D33C004E8EE8 /* LynxBorder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LynxBorder.png; sourceTree = "<group>"; };
 		9C974A842D27D3DB004E8EE8 /* LNXHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNXHeader.h; sourceTree = "<group>"; };
@@ -99,6 +100,7 @@
 				9CBC0C8E26DD7C2A0039D17E /* README.md */,
 				A4AA02141B04077F0043E4D4 /* History.txt */,
 				9C974AAF2D2C52CF004E8EE8 /* Formats.txt */,
+				9C7CC88B2F6F156F00A49004 /* Builder.html */,
 				746D78E014ED9A6D00CC738F /* makefile */,
 				A48CC0251618E65200465E20 /* source */,
 				350E1C3418AFB50800074DD5 /* graphics */,

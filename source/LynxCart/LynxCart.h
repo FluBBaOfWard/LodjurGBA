@@ -63,4 +63,4 @@ void cartAddressStrobe(CART *chip, bool strobe);
 } // extern "C"
 #endif
 
-#endif // LYNXCART_HEADER
+#endif // !LYNXCART_HEADER

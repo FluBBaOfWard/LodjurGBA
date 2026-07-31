@@ -10,6 +10,7 @@
 	.global romSpacePtr
 	.global biosSpace
 	.global lynxRAM
+	.global SCRATCH_BUFF
 	.global DIRTYTILES
 	.global gRomSize
 	.global maxRomSize
@@ -52,13 +53,23 @@ ROM_Space:
 //	.incbin "roms/tests/cpu.lnx"
 //	.incbin "roms/tests/math.lnx"
 //	.incbin "roms/tests/memio.lnx"
+//	.incbin "roms/tests/page-mode.lnx"
+//	.incbin "roms/tests/refresh-rate.lnx"
+//	.incbin "roms/tests/sprites1.lnx"
+//	.incbin "roms/tests/sprites2.lnx"
+//	.incbin "roms/tests/sprites3.lnx"
+//	.incbin "roms/tests/sprites4.lnx"
+//	.incbin "roms/tests/sprites5.lnx"
 //	.incbin "roms/tests/timers.lnx"
 //	.incbin "roms/tests/uart.lnx"
 //	.incbin "roms/tests/uart2.lnx"
+//	.incbin "roms/tests/tutorial-collisions.lnx"
+//	.incbin "roms/tests/tutorial-pens.lnx"
+//	.incbin "roms/tests/tutorial-sprites.lnx"
 ROM_SpaceEnd:
 LYNX_BIOS_INTERNAL:
 	.incbin "roms/lynxboot.img"
-#endif
+#endif // EMBEDDED_ROM
 
 	.section .ewram, "ax", %progbits
 	.align 2
@@ -76,7 +87,7 @@ machineInit: 				;@ Called from C
 	ldr r1,=LYNX_BIOS_INTERNAL
 	mov r2,#0x200
 	bl memcpy
-#endif
+#endif // EMBEDDED_ROM
 	bl memoryMapInit
 	bl gfxInit
 //	bl ioInit
@@ -235,6 +246,8 @@ biosSpace:
 	.space 0x200
 cart_0:
 	.space cartSize
+SCRATCH_BUFF:
+//	.space 0x20000
 ;@----------------------------------------------------------------------------
 	.end
-#endif // #ifdef __arm__
+#endif // __arm__

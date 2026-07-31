@@ -45,4 +45,4 @@ typedef struct
 	const u8 unused[3];
 } LnxHeader;
 
-#endif	// LNXHEADER
+#endif // !LNXHEADER

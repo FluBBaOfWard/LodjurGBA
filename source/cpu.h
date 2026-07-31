@@ -26,4 +26,4 @@ void cpuInit(int lynxType);
 } // extern "C"
 #endif
 
-#endif // CPU_HEADER
+#endif // !CPU_HEADER

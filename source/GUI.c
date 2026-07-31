@@ -16,7 +16,7 @@
 #include "ARMMikey/Version.h"
 #include "ARMSuzy/Version.h"
 
-#define EMUVERSION "V0.1.4 2026-01-19"
+#define EMUVERSION "V0.1.5 2026-07-31"
 
 void hacksInit(void);
 
@@ -121,7 +121,7 @@ const char *const scrModeTxt[]  = {"1:1", "Rot Left", "Rot Right", "Zoom"};
 
 /// This is called at the start of the emulator
 void setupGUI() {
-//	keysSetRepeat(25, 4);	// Delay, repeat.
+	setRepeat(25, 4);	// Delay, repeat.
 	menu1.itemCount = ARRSIZE(mainItems) - (enableExit?0:1);
 	closeMenu();
 }

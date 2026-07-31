@@ -16,6 +16,7 @@ extern u8 gSOC;
 extern u8 gHasHeader;
 
 extern u8 lynxRAM[0x10000];
+extern u8 SCRATCH_BUFF[0x20000];
 extern u8 biosSpace[0x200];
 extern const u8 *romSpacePtr;
 
@@ -28,4 +29,4 @@ void loadCart(void);
 } // extern "C"
 #endif
 
-#endif // CART_HEADER
+#endif // !CART_HEADER

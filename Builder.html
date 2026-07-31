@@ -381,12 +381,13 @@
 				// Handle splash screen
 				if (splashFileInput.files.length != 0) {
 					const imgFile = splashFileInput.files[0];
-					if (imgFile.type.startsWith("image/")) {
-						await processImage(imgFile, finalArray);
-					}
-					else {
+					const imgName = imgFile.name.toLowerCase()
+					if (imgName.endsWith(".raw") || imgName.endsWith(".bin")) {
 						const imageBuf = await imgFile.arrayBuffer();
 						finalArray.push(new Uint8Array(imageBuf));
+					}
+					else if (imgFile.type.startsWith("image/")) {
+						await processImage(imgFile, finalArray);
 					}
 				}
 

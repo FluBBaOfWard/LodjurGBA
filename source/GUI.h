@@ -38,4 +38,4 @@ void debugPowerOff(void);
 } // extern "C"
 #endif
 
-#endif // GUI_HEADER
+#endif // !GUI_HEADER

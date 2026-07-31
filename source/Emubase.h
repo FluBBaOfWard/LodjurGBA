@@ -19,22 +19,22 @@ typedef struct {
 	const u8 bios;				// Bit 0 = Bios,
 	const u8 reserved[15];
 	const char name[32];
+	const u8 romData[];
 } RomHeader;
 
 typedef struct {				//(config struct)
 	char magic[4];				//="CFG",0
 	int emuSettings;
-	int sleepTime;				// autoSleepTime in frames
+	int unused;					// unused
 	u8 gammaValue;				// from gfx.s
 	u8 config;					// from cart.s
 	u8 controller;				// from io.s
 	u8 contrastValue;			// from gfx.s
 	u8 machine;
-	char currentPath[256];
 } ConfigData;
 
 #ifdef __cplusplus
 } // extern "C"
 #endif
 
-#endif // EMUBASE
+#endif // !EMUBASE

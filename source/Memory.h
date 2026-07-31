@@ -13,4 +13,4 @@ void rom_W(u32 addr, u8 value);
 } // extern "C"
 #endif
 
-#endif	// MEMORY_HEADER
+#endif // !MEMORY_HEADER

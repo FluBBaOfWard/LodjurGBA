@@ -1,6 +1,11 @@
 LodjurGBA revision history
 -=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+V0.1.5 - 2026-07-31 (FluBBa)
+	Added a HTML builder.
+	Added PogoShell support.
+	Fixed exit from emulator.
+
 V0.1.4 - 2026-01-19 (FluBBa)
 	Added CPU differences between Lynx & Lynx II.
 	Added Mikey & Suzy revision differences between Lynx & Lynx II.

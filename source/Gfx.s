@@ -220,6 +220,10 @@ palCacheLoop:
 	bne palCacheLoop
 
 palCacheOk:
+	ldr r4,frameTotal				;@ Do some frame skipping.
+	ands r4,r4,#3
+	ldmfdne sp!,{r4-r5,pc}
+
 	ldr r1,currentDest
 
 	mov r4,#GAME_WIDTH/2
@@ -279,7 +283,7 @@ vblIrqHandler:
 	.type vblIrqHandler STT_FUNC
 ;@----------------------------------------------------------------------------
 	stmfd sp!,{r4-r8,lr}
-	bl vblSound1
+	bl soundSwapBuffers
 	bl calculateFPS
 
 	mov r6,#REG_BASE
@@ -314,7 +318,7 @@ vblIrqHandler:
 nothingNew:
 
 	bl scanKeys
-	bl vblSound2
+	bl soundRender
 	ldmfd sp!,{r4-r8,lr}
 	bx lr
 
@@ -405,11 +409,12 @@ EMUPALBUFF:
 
 #ifdef NDS
 	.section .sbss				;@ This is DTCM on NDS with devkitARM
-#elif GBA
+#else
 	.section .bss				;@ This is IWRAM on GBA with devkitARM
 #endif
+	.align 2
 PAL_CACHE:
 	.space 0x40					;@ 16*4
 ;@----------------------------------------------------------------------------
 	.end
-#endif // #ifdef __arm__
+#endif // __arm__
