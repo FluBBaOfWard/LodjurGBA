@@ -1,3 +1,10 @@
+//
+//  io.h
+//  LodjurGBA
+//
+//  Created by Fredrik Ahlström on 2024-07-29.
+//  Copyright © 2024-2026 Fredrik Ahlström. All rights reserved.
+//
 #ifndef IO_HEADER
 #define IO_HEADER
 
@@ -27,6 +34,13 @@ int ioLoadState(const void *source);
  * @return The size of the state.
  */
 int ioGetStateSize(void);
+
+/**
+ * Convert device input keys to target keys.
+ * @param input NDS/GBA keys
+ * @return The converted input.
+ */
+int convertInput(int input);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -1,3 +1,10 @@
+//
+//  cpu.h
+//  LodjurGBA
+//
+//  Created by Fredrik Ahlström on 2024-07-29.
+//  Copyright © 2024-2026 Fredrik Ahlström. All rights reserved.
+//
 #ifndef CPU_HEADER
 #define CPU_HEADER
 

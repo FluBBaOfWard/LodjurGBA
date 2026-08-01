@@ -8,6 +8,7 @@
 #include "Shared/EmuMenu.h"
 #include "Shared/EmuSettings.h"
 #include "Shared/FileHelper.h"
+#include "Shared/SRAMHandler.h"
 #include "Shared/AsmExtra.h"
 #include "Gui.h"
 #include "Cart.h"
@@ -36,7 +37,6 @@ void applyConfigData(void) {
 }
 
 void updateConfigData(void) {
-	strcpy(cfg.magic, "cfg");
 	cfg.emuSettings   = emuSettings & ~EMUSPEED_MASK;	// Clear speed setting.
 	cfg.config        = (gBorderEnable & 1) ^ 1;
 	cfg.gammaValue    = gGammaValue;
@@ -48,15 +48,14 @@ void updateConfigData(void) {
 void initSettings() {
 	memset(&cfg, 0, sizeof(ConfigData));
 	cfg.emuSettings   = AUTOPAUSE_EMULATION | AUTOLOAD_NVRAM | AUTOSLEEP_OFF | ALLOW_SPEED_HACKS;
-	cfg.contrastValue = 3;
+	cfg.contrastValue = 1;
 	cfg.machine       = HW_AUTO;
 
 	applyConfigData();
 }
 
 int loadSettings() {
-	bytecopy_((u8 *)&cfg, (u8 *)SRAM+0x10000-sizeof(ConfigData), sizeof(ConfigData));
-	if (strstr(cfg.magic, "cfg")) {
+	if (readFile((u8 *)&cfg, sizeof(cfg), LNXID)) {
 		applyConfigData();
 		infoOutput("Settings loaded.");
 		return 0;
@@ -70,13 +69,17 @@ int loadSettings() {
 void saveSettings() {
 	updateConfigData();
 
-	bytecopy_((u8 *)SRAM+0x10000-sizeof(ConfigData), (u8 *)&cfg, sizeof(ConfigData));
-	infoOutput("Settings saved.");
+	if (writeFile((u8 *)&cfg, sizeof(cfg), LNXID, "Config")) {
+		infoOutput("Settings saved.");
+	}
+	else {
+		infoOutput("Could not save settings file.");
+	}
 }
 
-void loadNVRAM() {
-	int saveSize = 0;
-	void *nvMem = NULL;
+int loadNVRAM() {
+//	int saveSize = 0;
+//	void *nvMem = NULL;
 /*
 	if (sramSize > 0) {
 		saveSize = sizeof(wsSRAM);
@@ -91,69 +94,80 @@ void loadNVRAM() {
 	}
 	bytecopy_(nvMem, (u8 *)SRAM, saveSize);
 	infoOutput("Loaded NVRAM.");*/
+	return 0;
 }
 
 void saveNVRAM() {
-	int saveSize = 0;
-	void *nvMem = NULL;
-/*
-	if (sramSize > 0) {
-		saveSize = sizeof(wsSRAM);
-		nvMem = wsSRAM;
-	}
-	else if (eepromSize > 0) {
-		saveSize = eepromSize;
-		nvMem = extEepromMem;
-	}
-	else {
-		return;
-	}
-	bytecopy_((u8 *)SRAM, nvMem, saveSize);
-	infoOutput("Saved NVRAM.");*/
+//	if (gCartFlags & SRAMFLAG) {
+//		forceSaveNVRAM();
+//	}
+}
+int forceSaveNVRAMChk() {
+//	if (saveEmuSram(EMU_SRAM, 0x8000)) {
+//		infoOutput("Saved NVRAM.");
+//		return 1;
+//	}
+	return 0;
+}
+void forceSaveNVRAM() {
+	forceSaveNVRAMChk();
 }
 
-void loadState(void) {
-//	unpackState(testState);
-	infoOutput("Loaded state.");
+int loadStateChk() {
+	if (getStateSize() < 0x10000
+		&& quickLoad()) {
+		infoOutput("Loaded State.");
+		return loadNVRAM();
+	}
+	return 0;
 }
-void saveState(void) {
-//	packState(testState);
-	infoOutput("Saved state.");
+int saveStateChk() {
+	if (getStateSize() < 0x10000
+		&& quickSave()) {
+		infoOutput("Saved State.");
+		return forceSaveNVRAMChk();
+	}
+	return 0;
+}
+
+void loadState() {
+	loadStateChk();
+}
+void saveState() {
+	saveStateChk();
 }
 
 //---------------------------------------------------------------------------------
-void loadBioses(void) {
-	const RomHeader *bh;
-	int n = 0;
-	while ((bh = findBios(n++))) {
-		memcpy(biosSpace, (const u8 *)bh + sizeof(RomHeader), 0x200);
-	}
-}
-
 bool loadGame(const RomHeader *rh) {
 	if (rh) {
-		gRomSize = rh->filesize;
-		romSpacePtr = (const u8 *)rh + sizeof(RomHeader);
-		selectedGame = selected;
-		setPowerIsOn(false);
-		if ((gHasHeader = checkLnxHeader((LnxHeader *)romSpacePtr))) {
-			gRomSize = lnxHeader.bank0PageSize << 8;
-		}
-		checkMachine(rh);
-//		setEmuSpeed(0);
-		loadCart();
-		gameInserted = true;
-		if (emuSettings & AUTOLOAD_NVRAM) {
-			loadNVRAM();
-		}
-		if (emuSettings & AUTOLOAD_STATE) {
-			loadState();
-		}
-		setPowerIsOn(true);
-		closeMenu();
-		return false;
+		return loadROM(rh->romData, rh->filesize, rh->flags);
 	}
 	return true;
+}
+//---------------------------------------------------------------------------------
+bool loadROM(const u8 *rom, int size, int emuFlags) {
+	selectedGame = selected;
+	gRomSize = size;
+	romSpacePtr = rom;
+	setPowerIsOn(false);
+	if ((gHasHeader = checkLnxHeader((LnxHeader *)romSpacePtr))) {
+		gRomSize = lnxHeader.bank0PageSize << 8;
+	}
+	checkMachine();
+//	setEmuSpeed(0);
+	loadCart();
+	int loadedSRAM = 0;
+	if (emuSettings & AUTOLOAD_STATE) {
+		loadedSRAM = loadStateChk();
+	}
+	if ((emuSettings & AUTOLOAD_NVRAM)
+		&& loadedSRAM == 0) {
+		loadNVRAM();
+	}
+	gameInserted = true;
+	setPowerIsOn(true);
+	closeMenu();
+	return false;
 }
 
 void selectGame() {
@@ -162,6 +176,15 @@ void selectGame() {
 	const RomHeader *rh = browseForFile();
 	if (loadGame(rh)) {
 		backOutOfMenu();
+	}
+}
+
+//---------------------------------------------------------------------------------
+void loadBioses(void) {
+	const RomHeader *bh;
+	int n = 0;
+	while ((bh = findBios(n++))) {
+		memcpy(biosSpace, (const u8 *)bh + sizeof(RomHeader), 0x200);
 	}
 }
 
@@ -188,7 +211,7 @@ bool checkLnxHeader(const LnxHeader *lHead) {
 	return isLNX;
 }
 
-void checkMachine(const RomHeader *rh) {
+void checkMachine() {
 	u8 newMachine = gMachineSet;
 	if (newMachine == HW_AUTO) {
 		newMachine = HW_LYNX_II;

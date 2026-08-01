@@ -16,7 +16,7 @@
 #include "ARMMikey/Version.h"
 #include "ARMSuzy/Version.h"
 
-#define EMUVERSION "V0.1.5 2026-07-31"
+#define EMUVERSION "V0.1.5 2026-08-01"
 
 void hacksInit(void);
 
@@ -37,6 +37,11 @@ static const char *getContrastText(void);
 static void screenModeSet(void);
 static const char *getScreenModeText(void);
 
+static void powerOnOff(void);
+static void resetConsole(void);
+
+void uiAbout(void);
+
 const MItem dummyItems[] = {
 	{"", uiDummy},
 };
@@ -49,15 +54,16 @@ const MItem mainItems[] = {
 	{"Debug->", ui7},
 	{"About->", ui8},
 	{"Sleep", gbaSleep},
-	{"Reset Console", resetGame},
+	{"Power On/Off", powerOnOff},
+	{"Reset Console", resetConsole},
 	{"Quit Emulator", ui10},
 };
 const MItem fileItems[] = {
 	{"Load Game->", selectGame},
 	{"Load NVRAM", loadNVRAM},
 	{"Save NVRAM", saveNVRAM},
+	{"Manage NVRAM->", viewNVRAM},
 	{"Save Settings", saveSettings},
-	{"Reset Game", resetGame},
 };
 const MItem ctrlItems[] = {
 	{"B Autofire: ", autoBSet, getAutoBText},
@@ -79,6 +85,7 @@ const MItem machineItems[] = {
 const MItem setItems[] = {
 	{"Speed: ", speedSet, getSpeedText},
 	{"Autoload State: ", autoStateSet, getAutoStateText},
+	{"Autoload NVRAM: ", autoNVRAMSet, getAutoNVRAMText},
 	{"Autosave Settings: ", autoSettingsSet, getAutoSettingsText},
 	{"Autopause Game: ", autoPauseGameSet, getAutoPauseGameText},
 	{"EWRAM Overclock: ", ewramSet, getEWRAMText},
@@ -105,7 +112,7 @@ const Menu menu5 = MENU_M("Machine Settings", uiAuto, machineItems);
 const Menu menu6 = MENU_M("Other Settings", uiAuto, setItems);
 const Menu menu7 = MENU_M("Debug", uiAuto, debugItems);
 const Menu menu8 = MENU_M("About", uiAbout, dummyItems);
-const Menu menu9 = MENU_M("Load game", uiLoadGame, fnList9);
+const Menu menu9 = MENU_M("Load game", setupSubMenuText, fnList9);
 const Menu menu10 = MENU_M("Quit Emulator?", uiAuto, quitItems);
 
 const Menu *const menus[] = {&menu0, &menu1, &menu2, &menu3, &menu4, &menu5, &menu6, &menu7, &menu8, &menu9, &menu10 };
@@ -173,21 +180,20 @@ void uiAbout() {
 	drawText("ARM6502    " ARM6502VERSION, 19);
 }
 
-void uiLoadGame() {
-	setupSubMenuText();
-}
-
 void nullUINormal(int key) {
 }
 
 void nullUIDebug(int key) {
 }
 
-void resetGame() {
-	loadCart();
-	setupEmuBackground();
-	setupMenuPalette();
-	powerIsOn = true;
+void powerOnOff() {
+	setPowerIsOn(!powerIsOn);
+}
+
+void resetConsole() {
+	setPowerIsOn(false);
+	checkMachine();
+	setPowerIsOn(true);
 }
 
 //---------------------------------------------------------------------------------

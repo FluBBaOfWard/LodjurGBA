@@ -58,18 +58,25 @@ int main(int argc, char **argv) {
 	setupGUI();
 	getInput();
 	initSettings();
-	bool fsOk = initFileHelper(LNXID);
 	loadSettings();
-	machineInit();
-	loadCart();
-	setupEmuBackground();
-	if (fsOk) {
+	if (initFileHelper(LNXID)) {
 		loadBioses();
+	}
+	machineInit();
+	setupEmuBackground();
+	if (romsAvailable > 0) {
 		const RomHeader *rh = findRom(0);
 		loadGame(rh);
 	}
 	else {
-		infoOutput("No roms found.");
+		const PogoFile *pogoFile = getPogoFile();
+		if (pogoFile != NULL) {
+			loadROM(pogoFile->romPtr, pogoFile->size, 0);
+		}
+		else {
+			infoOutput("No roms found.");
+			loadCart();
+		}
 	}
 
 	while (1) {
@@ -138,7 +145,11 @@ void setPowerIsOn(bool power) {
 	if (powerIsOn != power) {
 		powerIsOn = power;
 		if (!powerIsOn) {
+			gfxPowerOff();
 			debugPowerOff();
+		}
+		else {
+			loadCart();
 		}
 		if (gMachine == HW_LYNX_II) {
 			u32 *src = (u32 *)TILE_BASE_ADR(0);
@@ -162,25 +173,25 @@ static void setupGraphics() {
 //---------------------------------------------------------------------------------
 
 	// Set up the display
-	GFX_DISPCNT = MODE_0
+	GFX_DISPCNT = MODE_3
 				| BG2_ON
 				| BG3_ON
-//				| WIN0_ON
+				| WIN0_ON
 //				| WIN1_ON
 				;
 	SetMode(GFX_DISPCNT);
-	GFX_BG0CNT = TEXTBG_SIZE_256x512 | BG_MAP_BASE(0) | BG_TILE_BASE(2) | BG_PRIORITY(2);
-	GFX_BG1CNT = TEXTBG_SIZE_256x512 | BG_MAP_BASE(2) | BG_TILE_BASE(2) | BG_PRIORITY(1);
-	REG_BG0CNT = GFX_BG0CNT;
-	REG_BG1CNT = GFX_BG1CNT;
-	// Background 2 for border
-	REG_BG2CNT = TEXTBG_SIZE_256x256 | BG_MAP_BASE(15) | BG_256_COLOR | BG_TILE_BASE(1) | BG_PRIORITY(3);
+//	GFX_BG0CNT = TEXTBG_SIZE_256x512 | BG_MAP_BASE(0) | BG_TILE_BASE(2) | BG_PRIORITY(2);
+//	GFX_BG1CNT = TEXTBG_SIZE_256x512 | BG_MAP_BASE(2) | BG_TILE_BASE(2) | BG_PRIORITY(1);
+//	REG_BG0CNT = GFX_BG0CNT;
+//	REG_BG1CNT = GFX_BG1CNT;
+	// Background 2 for game
+	REG_BG2CNT = BG_MAP_BASE(2) | BG_PRIORITY(3);
 	REG_BG2HOFS = 8;	// Center border
 	REG_BG2VOFS = 16;
 
 	// Set up background 3 for menu
-	REG_BG3CNT = TEXTBG_SIZE_512x256 | BG_MAP_BASE(6) | BG_TILE_BASE(0) | BG_PRIORITY(0);
-	menuMap = MAP_BASE_ADR(6);
+	REG_BG3CNT = TEXTBG_SIZE_512x256 | BG_MAP_BASE(0) | BG_TILE_BASE(0) | BG_PRIORITY(0);
+	menuMap = MAP_BASE_ADR(0);
 
 	LZ77UnCompVram(EmuFontTiles, (void *)VRAM+0x2400);
 	setupMenuPalette();

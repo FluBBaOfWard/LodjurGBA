@@ -1,3 +1,10 @@
+//
+//  Gfx.s
+//  LodjurGBA
+//
+//  Created by Fredrik Ahlström on 2024-07-29.
+//  Copyright © 2024-2026 Fredrik Ahlström. All rights reserved.
+//
 #ifdef __arm__
 
 #include "Shared/gba_asm.h"
@@ -15,6 +22,7 @@
 
 	.global gfxInit
 	.global gfxReset
+	.global gfxPowerOff
 	.global gfxWinInit
 	.global paletteInit
 	.global paletteTxAll
@@ -44,6 +52,8 @@ gfxInit:					;@ Called from machineInit
 	ldr r1,=gfxEndFrame
 	ldr r2,=lynxRAM
 	bl mikeyInit
+	ldr r0,=setPowerIsOn
+	str r0,[mikptr,#mikPowerCallback]
 
 	ldr suzptr,=suzy_0
 	ldr r0,=lynxRAM
@@ -64,7 +74,7 @@ gfxReset:					;@ Called with CPU reset
 
 	ldr r0,=(((SCREEN_HEIGHT-GAME_HEIGHT)/2) * SCREEN_WIDTH * 2)
 	add r0,r0,#SCREEN_WIDTH-GAME_WIDTH
-	add r0,r0,#0x06000000
+	add r0,r0,#BG_GFX
 	str r0,currentDest
 
 	bl gfxWinInit
@@ -220,9 +230,9 @@ palCacheLoop:
 	bne palCacheLoop
 
 palCacheOk:
-	ldr r4,frameTotal				;@ Do some frame skipping.
-	ands r4,r4,#3
-	ldmfdne sp!,{r4-r5,pc}
+//	ldr r4,frameTotal				;@ Do some frame skipping.
+//	ands r4,r4,#3
+//	ldmfdne sp!,{r4-r5,pc}
 
 	ldr r1,currentDest
 
@@ -264,6 +274,15 @@ rendLoopFlip:
 #ifdef GBA
 	.section .ewram, "ax", %progbits	;@ For the GBA
 #endif
+;@----------------------------------------------------------------------------
+gfxPowerOff:
+	.type gfxPowerOff STT_FUNC
+;@----------------------------------------------------------------------------
+	stmfd sp!,{mikptr,lr}
+	ldr mikptr,=mikey_0
+	bl mikeyDisplayOff
+	ldmfd sp!,{mikptr,lr}
+	bx lr
 ;@----------------------------------------------------------------------------
 setScreenRefresh:			;@ r0 in = Lynx cycles per frame.
 ;@----------------------------------------------------------------------------
@@ -333,7 +352,7 @@ gfxEndFrame:				;@ Called just before screen end (~line 102) (r0-r3 safe to use)
 
 	ldr r0,=(((SCREEN_HEIGHT-GAME_HEIGHT)/2) * SCREEN_WIDTH * 2)
 	add r0,r0,#SCREEN_WIDTH-GAME_WIDTH
-	add r0,r0,#0x06000000
+	add r0,r0,#BG_GFX
 	str r0,currentDest
 
 	mov r0,#1

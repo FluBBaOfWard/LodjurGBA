@@ -16,13 +16,8 @@ void exitGUI(void);
 void quickSelectGame(void);
 void nullUINormal(int key);
 void nullUIDebug(int key);
-void resetGame(void);
 
 void uiNullNormal(void);
-void uiMainMenu(void);
-void uiFile(void);
-void uiAbout(void);
-void uiLoadGame(void);
 
 void debugIOUnmappedR(u16 port);
 void debugIOUnmappedW(u8 val, u16 port);

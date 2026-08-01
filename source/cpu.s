@@ -1,3 +1,10 @@
+//
+//  cpu.s
+//  LodjurGBA
+//
+//  Created by Fredrik Ahlström on 2024-07-29.
+//  Copyright © 2024-2026 Fredrik Ahlström. All rights reserved.
+//
 #ifdef __arm__
 
 #include "ARMMikey/ARMMikey.i"

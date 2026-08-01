@@ -6,6 +6,9 @@ An Atari Lynx emulator for Nintendo GBA.
 
 ## How to use
 
+Start the [HTML Builder](https://flubbaofward.github.io/S8GBA/Builder.html)
+in a newish browser, always add the bios file before any normal roms.
+
 When the emulator starts, you press L+R to open up the menu.
 Now you can use the cross to navigate the menus, A to select an option,
 B to go back a step.
@@ -18,7 +21,6 @@ B to go back a step.
 * Load NVRAM: Load non volatile ram (EEPROM) for the currently running game.
 * Save NVRAM: Save non volatile ram (EEPROM) for the currently running game.
 * Save Settings: Save the current settings.
-* Reset Game: Reset the currently running game.
 
 ### Controller
 
@@ -46,13 +48,13 @@ B to go back a step.
   * 200%: Game runs at double speed.
   * Max: Games can run up to 4 times normal speed.
   * 50%: Game runs at half speed.
-* Autoload State: Toggle Savestate autoloading. Automagically load the
+* Autoload State: Toggle Savestate autoloading. Automatically load the
  savestate associated with the selected game.
-* Autoload NVRAM: Toggle EEPROM autoloading. Automagically load the EEPROM
+* Autoload NVRAM: Toggle EEPROM autoloading. Automatically load the EEPROM
  associated with the selected game.
 * Autosave Settings: This will save settings when leaving menu if any changes are made.
 * Autopause Game: Toggle if the game should pause when opening the menu.
-* Overclock EWRAM: Changes the waitstates on EWRAM between 2 and 1, might
+* EWRAM Overclock: Changes the waitstates on EWRAM between 2 and 1, might
  damage your GBA and uses more power, around 10% speedgain. Doesn't work on
  Gameboy Micro. Use at your own risk!
 * Autosleep: Change the autosleep time, also see Sleep.
@@ -70,6 +72,14 @@ Some info about the emulator and game...
 
 Put the GBA into sleepmode. START+SELECT wakes up from sleep mode (activated
  from this menu or from 5/10/30 minutes of inactivity).
+
+### Power On/Off
+
+Turn the power on or off on the console.
+
+### Reset Console
+
+Reset the console.
 
 ## Controls
 

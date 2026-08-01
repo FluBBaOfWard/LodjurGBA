@@ -1,3 +1,10 @@
+//
+//  io.s
+//  LodjurGBA
+//
+//  Created by Fredrik Ahlström on 2024-07-29.
+//  Copyright © 2024-2026 Fredrik Ahlström. All rights reserved.
+//
 #ifdef __arm__
 
 #include "Shared/EmuMenu.i"
@@ -54,7 +61,7 @@ convertInput:			;@ Convert from device keys to target r0=input/output
 	.type convertInput STT_FUNC
 ;@----------------------------------------------------------------------------
 	mvn r1,r0
-	tst r1,#KEY_L|KEY_R				;@ Keys to open menu
+	tst r1,#KEY_L|KEY_R			;@ Keys to open menu
 	orreq r0,r0,#ACT_OPEN_MENU
 	bx lr
 ;@----------------------------------------------------------------------------
@@ -75,7 +82,7 @@ refreshEMUjoypads:			;@ Call every frame
 
 	ldr r4,EMUinput
 	mov r3,r4
-	and r0,r4,#0xf0
+	and r0,r4,#KEY_JOY_MASK
 		ldr r2,joyCfg
 		andcs r3,r3,r2
 		tstcs r3,r3,lsr#10		;@ GBA L?

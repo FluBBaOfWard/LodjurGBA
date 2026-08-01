@@ -1,3 +1,10 @@
+//
+//  Cart.s
+//  LodjurGBA
+//
+//  Created by Fredrik Ahlström on 2024-07-29.
+//  Copyright © 2024-2026 Fredrik Ahlström. All rights reserved.
+//
 #ifdef __arm__
 
 #include "ARMSuzy/ARMSuzy.i"
@@ -247,7 +254,7 @@ biosSpace:
 cart_0:
 	.space cartSize
 SCRATCH_BUFF:
-//	.space 0x20000
+	.space 0x20000
 ;@----------------------------------------------------------------------------
 	.end
 #endif // __arm__

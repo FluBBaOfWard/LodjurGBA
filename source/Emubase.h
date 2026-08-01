@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#define LNXID 0x1A584C41		// "ALX",0x1A - Lynx
+#define LNXID 0x1A584C41		// "ALX",0x1A - Atari Lynx
 
 #define HALF_CPU_SPEED		(1<<16)
 #define ALLOW_SPEED_HACKS	(1<<17)
@@ -23,7 +23,6 @@ typedef struct {
 } RomHeader;
 
 typedef struct {				//(config struct)
-	char magic[4];				//="CFG",0
 	int emuSettings;
 	int unused;					// unused
 	u8 gammaValue;				// from gfx.s

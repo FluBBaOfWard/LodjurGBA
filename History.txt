@@ -1,9 +1,10 @@
 LodjurGBA revision history
 -=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-V0.1.5 - 2026-07-31 (FluBBa)
+V0.1.5 - 2026-08-01 (FluBBa)
 	Added a HTML builder.
 	Added PogoShell support.
+	Fixed sprite type 2 (Boundary Shadow).
 	Fixed exit from emulator.
 
 V0.1.4 - 2026-01-19 (FluBBa)
