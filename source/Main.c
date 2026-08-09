@@ -49,6 +49,7 @@ void myVBlank(void) {
 //---------------------------------------------------------------------------------
 int main(int argc, char **argv) {
 //---------------------------------------------------------------------------------
+	enableExit = true;
 	irqInit();
 	irqEnable(IRQ_VBLANK);
 	showSplash(getSplashScreen(LNXID));

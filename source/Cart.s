@@ -53,27 +53,30 @@ ROM_Space:
 //	.incbin "roms/Dracula - The Undead (1991).lnx"
 //	.incbin "roms/Ninja Gaiden (1990).lnx"
 //	.incbin "roms/Ninja Gaiden III - the Ancient Ship of Doom (1993).lnx"
+//	.incbin "roms/S.T.U.N. Runner (1991).lnx"
 //	.incbin "roms/Shadow of the Beast (1992)[crc-2].lnx"
 //	.incbin "roms/Toki (1990).lnx"
 //	.incbin "roms/tests/audio.lnx"
 //	.incbin "roms/tests/audio2.lnx"
-//	.incbin "roms/tests/cpu.lnx"
-//	.incbin "roms/tests/math.lnx"
-//	.incbin "roms/tests/memio.lnx"
-//	.incbin "roms/tests/page-mode.lnx"
+//	.incbin "roms/tests/cpu.lnx" // Pass
+//	.incbin "roms/tests/math.lnx" // Pass except timing
+//	.incbin "roms/tests/memio.lnx" // Pass
+//	.incbin "roms/tests/page-mode.lnx" // Only timing
 //	.incbin "roms/tests/refresh-rate.lnx"
-//	.incbin "roms/tests/sprites1.lnx"
-//	.incbin "roms/tests/sprites2.lnx"
-//	.incbin "roms/tests/sprites3.lnx"
-//	.incbin "roms/tests/sprites4.lnx"
-//	.incbin "roms/tests/sprites5.lnx"
-//	.incbin "roms/tests/timers.lnx"
+//	.incbin "roms/tests/sdoneack.lnx" // Pass
+//	.incbin "roms/tests/sprites1.lnx" // Pass except timing
+//	.incbin "roms/tests/sprites2.lnx" // Pass except timing
+//	.incbin "roms/tests/sprites3.lnx" // Pass except timing
+//	.incbin "roms/tests/sprites4.lnx" // Pass except timing
+//	.incbin "roms/tests/sprites5.lnx" // Pass except timing
+//	.incbin "roms/tests/timers.lnx" // Pass except CTLB rd/wr
 //	.incbin "roms/tests/uart.lnx"
 //	.incbin "roms/tests/uart2.lnx"
 //	.incbin "roms/tests/tutorial-collisions.lnx"
 //	.incbin "roms/tests/tutorial-pens.lnx"
 //	.incbin "roms/tests/tutorial-sprites.lnx"
 ROM_SpaceEnd:
+	.align 2
 LYNX_BIOS_INTERNAL:
 	.incbin "roms/lynxboot.img"
 #endif // EMBEDDED_ROM

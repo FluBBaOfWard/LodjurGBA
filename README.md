@@ -6,7 +6,7 @@ An Atari Lynx emulator for Nintendo GBA.
 
 ## How to use
 
-Start the [HTML Builder](https://flubbaofward.github.io/S8GBA/Builder.html)
+Start the [HTML Builder](https://flubbaofward.github.io/LodjurGBA/Builder.html)
 in a newish browser, always add the bios file before any normal roms.
 
 When the emulator starts, you press L+R to open up the menu.
@@ -54,9 +54,9 @@ B to go back a step.
  associated with the selected game.
 * Autosave Settings: This will save settings when leaving menu if any changes are made.
 * Autopause Game: Toggle if the game should pause when opening the menu.
-* EWRAM Overclock: Changes the waitstates on EWRAM between 2 and 1, might
- damage your GBA and uses more power, around 10% speedgain. Doesn't work on
- Gameboy Micro. Use at your own risk!
+* EWRAM Overclock: Changes the waitstates on EWRAM between 2 and 1, uses more
+ power, around 10% speedgain. Doesn't work on Gameboy Micro, might damage your
+ GBA. Use at your own risk!
 * Autosleep: Change the autosleep time, also see Sleep.
 
 ### Debug

@@ -37,7 +37,7 @@ void applyConfigData(void) {
 }
 
 void updateConfigData(void) {
-	cfg.emuSettings   = emuSettings & ~EMUSPEED_MASK;	// Clear speed setting.
+	cfg.emuSettings   = emuSettings & ~EMUSPEED_MASK; // Clear speed setting.
 	cfg.config        = (gBorderEnable & 1) ^ 1;
 	cfg.gammaValue    = gGammaValue;
 	cfg.contrastValue = gContrastValue;
@@ -156,6 +156,7 @@ bool loadROM(const u8 *rom, int size, int emuFlags) {
 	checkMachine();
 //	setEmuSpeed(0);
 	loadCart();
+	gameInserted = true;
 	int loadedSRAM = 0;
 	if (emuSettings & AUTOLOAD_STATE) {
 		loadedSRAM = loadStateChk();
@@ -164,7 +165,6 @@ bool loadROM(const u8 *rom, int size, int emuFlags) {
 		&& loadedSRAM == 0) {
 		loadNVRAM();
 	}
-	gameInserted = true;
 	setPowerIsOn(true);
 	closeMenu();
 	return false;

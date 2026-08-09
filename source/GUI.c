@@ -16,7 +16,7 @@
 #include "ARMMikey/Version.h"
 #include "ARMSuzy/Version.h"
 
-#define EMUVERSION "V0.1.5 2026-08-01"
+#define EMUVERSION "V0.1.5 2026-08-09"
 
 void hacksInit(void);
 
@@ -62,7 +62,7 @@ const MItem fileItems[] = {
 	{"Load Game->", selectGame},
 	{"Load NVRAM", loadNVRAM},
 	{"Save NVRAM", saveNVRAM},
-	{"Manage NVRAM->", viewNVRAM},
+//	{"Manage NVRAM->", viewNVRAM},
 	{"Save Settings", saveSettings},
 };
 const MItem ctrlItems[] = {
