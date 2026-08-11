@@ -16,7 +16,7 @@
 #include "ARMMikey/Version.h"
 #include "ARMSuzy/Version.h"
 
-#define EMUVERSION "V0.1.5 2026-08-09"
+#define EMUVERSION "V0.1.5 2026-08-11"
 
 void hacksInit(void);
 
@@ -71,7 +71,8 @@ const MItem ctrlItems[] = {
 	{"Swap A-B:   ", swapABSet, getSwapABText},
 };
 const MItem displayItems[] = {
-	{"Screen:", screenModeSet, getScreenModeText},
+	{"Screen: ", screenModeSet, getScreenModeText},
+	{"Scaling: ", flickSet, getFlickText},
 	{"Gamma: ", gammaChange, getGammaText},
 	{"Contrast: ", contrastSet, getContrastText},
 //	{"Border: ", borderSet, getBorderText},

@@ -1,10 +1,10 @@
 LodjurGBA Todo
 
-	Add flicker to upscaled mode.
 	Add 16 colour renderer.
-	Add flicker for zoomed in image.
 	Add EEPROM support for homebrew.
 	Add audio code.
+	Add border image.
+	Make MB version for Pogoshell.
 	Find speed hacks.
 
 GFX:

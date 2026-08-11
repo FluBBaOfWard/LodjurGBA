@@ -20,6 +20,8 @@ extern u16 EMUPALBUFF[0x200];
 extern u32 GFX_DISPCNT;
 extern u16 GFX_BG0CNT;
 extern u16 GFX_BG1CNT;
+extern u32 GFX_BG2X;
+extern u32 GFX_BG2Y;
 
 void gfxInit(void);
 void gfxPowerOff(void);

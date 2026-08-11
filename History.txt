@@ -1,9 +1,9 @@
 LodjurGBA revision history
 -=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-V0.1.5 - 2026-08-09 (FluBBa)
+V0.1.5 - 2026-08-11 (FluBBa)
 	Added a HTML builder.
-	Added PogoShell support.
+	Added flicker to zoom.
 	Added Power On/Off to menu.
 	Fixed sprite type 2 (Boundary Shadow).
 	Fixed sprite HSizOff loading.

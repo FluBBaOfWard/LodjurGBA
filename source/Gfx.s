@@ -17,6 +17,8 @@
 	.global GFX_DISPCNT
 	.global GFX_BG0CNT
 	.global GFX_BG1CNT
+	.global GFX_BG2X
+	.global GFX_BG2Y
 	.global EMUPALBUFF
 	.global frameTotal
 
@@ -61,7 +63,7 @@ gfxInit:					;@ Called from machineInit
 
 	bl gfxWinInit
 
-	ldmfd sp!,{mikptr,lr}
+	ldmfd sp!,{mikptr,pc}
 
 ;@----------------------------------------------------------------------------
 gfxReset:					;@ Called with CPU reset
@@ -329,6 +331,16 @@ vblIrqHandler:
 	bic r0,r0,r2,lsl#8
 	strh r0,[r6,#REG_DISPCNT]
 
+	ldr r0,gFlicker
+	eors r0,r0,r0,lsl#31
+	str r0,gFlicker
+	ldr r0,GFX_BG2X
+	addmi r0,r0,#0x55
+	str r0,[r6,#REG_BG2X]
+	ldr r0,GFX_BG2Y
+	addmi r0,r0,#0x55
+	str r0,[r6,#REG_BG2Y]
+
 	ldrb r0,frameDone
 	cmp r0,#0
 	beq nothingNew
@@ -410,6 +422,10 @@ GFX_BG0CNT:
 	.short 0
 GFX_BG1CNT:
 	.short 0
+GFX_BG2X:
+	.long 0
+GFX_BG2Y:
+	.long 0
 
 #ifdef GBA
 	.section .sbss				;@ This is EWRAM on GBA with devkitARM

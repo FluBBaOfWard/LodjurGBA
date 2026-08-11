@@ -47,12 +47,7 @@ int getStateSize() {
 }
 
 static void setupBorderPalette(const unsigned short *palette, int len) {
-	if (gBorderEnable == 0) {
-		memcpy(EMUPALBUFF, LynxBorderPal, LynxBorderPalLen);
-	}
-	else {
-		memcpy(EMUPALBUFF, palette, len);
-	}
+	memcpy(EMUPALBUFF, palette, len);
 }
 
 #define BUFFER_WIDTH SCREEN_WIDTH
@@ -63,38 +58,41 @@ void setScreenMode(int mode) {
 	IntrWait(1, IRQ_VBLANK);
 	switch (mode) {
 		case 1:			// Rotate Left
-			REG_BG2X = (((SCREEN_WIDTH+SCREEN_HEIGHT)/2)-1)<<8;
-			REG_BG2Y = ((BUFFER_HEIGHT-SCREEN_WIDTH)/2)<<8;
+			GFX_BG2X = (((BUFFER_WIDTH+SCREEN_HEIGHT)/2)-1)<<8;
+			GFX_BG2Y = ((BUFFER_HEIGHT-SCREEN_WIDTH)/2)<<8;
 			REG_BG2PA = 0;
 			REG_BG2PB = -1<<8;
 			REG_BG2PC = 1<<8;
 			REG_BG2PD = 0;
 			break;
 		case 2:			// Rotate Right
-			REG_BG2X = ((SCREEN_WIDTH-SCREEN_HEIGHT)/2)<<8;
-			REG_BG2Y = (((BUFFER_HEIGHT+SCREEN_WIDTH)/2)-1)<<8;
+			GFX_BG2X = ((BUFFER_WIDTH-SCREEN_HEIGHT)/2)<<8;
+			GFX_BG2Y = (((BUFFER_HEIGHT+SCREEN_WIDTH)/2)-1)<<8;
 			REG_BG2PA = 0;
 			REG_BG2PB = 1<<8;
 			REG_BG2PC = -1<<8;
 			REG_BG2PD = 0;
 			break;
-		case 3:			// Zoom
-			REG_BG2X = ((BUFFER_WIDTH-GAME_WIDTH)/2)<<8;
-			REG_BG2Y = ((BUFFER_HEIGHT<<8)-SCREEN_HEIGHT*ZOOM_VAL)/2;
+		case 3:			// Zoom smooth
+//		case 4:			// Zoom
+			GFX_BG2X = ((BUFFER_WIDTH-GAME_WIDTH)/2)<<8;
+			GFX_BG2Y = ((BUFFER_HEIGHT<<8)-SCREEN_HEIGHT*ZOOM_VAL)/2;
 			REG_BG2PA = ZOOM_VAL;
 			REG_BG2PB = 0;
 			REG_BG2PC = 0;
 			REG_BG2PD = ZOOM_VAL;
 			break;
 		default:		// 1:1
-			REG_BG2X = 0;
-			REG_BG2Y = ((BUFFER_HEIGHT-SCREEN_HEIGHT)/2)<<8;
+			GFX_BG2X = 0;
+			GFX_BG2Y = ((BUFFER_HEIGHT-SCREEN_HEIGHT)/2)<<8;
 			REG_BG2PA = 1<<8;
 			REG_BG2PB = 0;
 			REG_BG2PC = 0;
 			REG_BG2PD = 1<<8;
 			break;
 	}
+	REG_BG2X = GFX_BG2X;
+	REG_BG2Y = GFX_BG2Y;
 }
 
 void setupLynxBackground() {
